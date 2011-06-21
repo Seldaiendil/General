@@ -1,0 +1,49 @@
+BODY {
+	overflow: hidden;
+}
+
+.MapCell {
+	border: 1px solid #AAA;
+	position:absolute;
+}
+.MapCol {
+	width: 9px;
+	top: 0;
+}
+.MapRow {
+	height: 9px;
+	left: 0;
+}
+
+.Element {
+	border: 1px solid black;
+	font-family: arial;
+	position: absolute;
+	font-weight: bold;
+	font-size: 10px;
+}
+.Animal-hold {
+	border: none;
+	position: absolute;
+}
+.Animal-head {
+	position: absolute;
+	border-color: yellow;
+	font-weight: bolder;
+}
+.Animal-body {
+	position: absolute;
+	border-color: red;
+}
+.Animal-tail {
+	position: absolute;
+	border-color: blue;
+}
+.Animal-dead {
+	background-color: black;
+	border: 1px solid red;
+}
+.Plant {
+	border: 1px solid #0B0;
+	background-color: #060;
+}

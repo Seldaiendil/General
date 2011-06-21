@@ -1,0 +1,36 @@
+.Parser-container {
+}
+.Parser-field {
+	/*cursor: ;*/
+}
+.Parser-this {
+}
+.Parser-member-name {
+	font-weight: bold;
+}
+.Parser-equals {
+}
+.Parser-field-value {
+	font-weight: bold;
+}
+.Parser-dotcomma {
+}
+
+.Parser-field-type-number {
+	color: #00F;
+}
+.Parser-field-type-string {
+	color: #F00;
+}
+.Parser-field-type-boolean {
+	color: #00F;
+}
+.Parser-field-type-undefined {
+	color: #888;
+}
+.Parser-field-type-null {
+	color: #888;
+}
+.Parser-field-type-function {
+	color: #0A0;
+}

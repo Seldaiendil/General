@@ -1,0 +1,23 @@
+<html>
+	<head>
+		<title>Ajax Test</title>
+		<script type="text/javascript" src="../../selchi/core/extensions.js"></script>
+		<script type="text/javascript" src="../../selchi/core/core.js"></script>
+		<script type="text/javascript" src="../../selchi/core/event.js"></script>
+		<script type="text/javascript" src="../../selchi/tools/parse.js"></script>
+		<script type="text/javascript" src="../../selchi/toolkit/ajax.js"></script>
+	</head>
+	<body>
+		<div id="container" />
+		<script type="text/javascript">
+			function success(response) {
+				document.getElementById('container').innerHTML = response.getText();
+			}
+			var ajax = new Ajax();
+			ajax.setUrl("/biblio/");
+			ajax.setAsync(true);
+			ajax.onSuccess.add(success);
+			/*success*/(ajax.call());
+		</script>
+	</body>
+</html>

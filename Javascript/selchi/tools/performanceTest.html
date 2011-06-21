@@ -1,0 +1,68 @@
+<html>
+	<head>
+		<title>Performance Test</title>
+		<script type="text/javascript" src="performanceTest.js"></script>
+		<script type="text/javascript">
+
+Function.prototype.extendAll = function(childClass) {
+	var self = this;
+	function extension() {
+		self.apply(this, arguments);
+		childClass.apply(this, arguments);
+	}
+	for (var prop in this)
+		if (this.hasOwnProperty(prop))
+			extension[prop] = this[prop];
+	extension.prototype = new this();
+	extension.prototype.constructor = extension;
+	extension.prototype._base_ = new this();
+	return extension;
+};
+
+Function.prototype.extendNormal = function(childClass) {
+	var self = this;
+	function extension() {
+		self.apply(this, arguments);
+		childClass.apply(this, arguments);
+	}
+	extension.prototype = new this();
+	extension.prototype.constructor = extension;
+	extension.prototype._base_ = new this();
+	return extension;
+};
+
+			function SuperClass() {
+				this.pepe1 = "";
+				this.pepe2 = 3;
+				this.pepe6 = 2;
+			}
+			SuperClass.Enum = { 'ASDF': 1, 'FDSA': 2 };
+			SuperClass.prototype.method = function() {
+				return "micasa" + this.pepe1;
+			};
+			function Class() {
+				this.class1 = null;
+			}
+
+			var test = new PerformanceTest();
+			test.methods = [
+				function fullExtensionMethod() {
+					var class = SuperClass.extendAll(Class);
+				},
+				function normalExtensionMethod() {
+					var class = SuperClass.extendNormal(Class);
+				},
+				function normalExtensionMethod() {
+					var class = SuperClass.extendNormal(Class);
+				},
+				function fullExtensionMethod() {
+					var class = SuperClass.extendAll(Class);
+				},
+			];
+			test.density *= 1;
+			test.run();
+		</script>
+	</head>
+	<body />
+	<script type="text/javascript"> test.print(); </script>
+</html>

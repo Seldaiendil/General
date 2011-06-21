@@ -1,0 +1,64 @@
+<html>
+	<head>
+		<title>TextField manual test</title>
+		<link rel="stylesheet" type="text/css" href="../../selchi/components/field.css" />
+		<script type="text/javascript" src="../../selchi/tools/parse.js"></script>
+		<script type="text/javascript" src="../../selchi/core/extensions.js"></script>
+		<script type="text/javascript" src="../../selchi/core/core.js"></script>
+		<script type="text/javascript" src="../../selchi/core/event.js"></script>
+		<script type="text/javascript" src="../../selchi/core/gui.js"></script>
+		<script type="text/javascript" src="../../selchi/components/field.js"></script>
+		<script type="text/javascript">
+			Event.onReady.add(function() {
+				/*
+				var field = new TextField();
+				field.setContainer(document.body);
+				field.setCss(new TextField.Css());
+				field.render();
+
+				function createCheckBox(css) {
+					var field = new CheckBox();
+					field.setContainer(document.body);
+					field.setTexts(new CheckBox.Texts());
+					field.setCss(css);
+					field.render();
+				}
+				createCheckBox(new CheckBox.Css());
+				createCheckBox({
+					checked: "CheckBox CheckBox-checked-22",
+					unchecked: "CheckBox CheckBox-unchecked-22"
+				});
+				createCheckBox({
+					checked: "CheckBox CheckBox-checked-16",
+					unchecked: "CheckBox CheckBox-unchecked-16"
+				});
+				createCheckBox({
+					checked: "RadioButton RadioButton-checked",
+					unchecked: "RadioButton RadioButton-unchecked"
+				});
+				createCheckBox({
+					checked: "RadioButton-22 RadioButton-checked-22",
+					unchecked: "RadioButton-22 RadioButton-unchecked-22"
+				});
+				createCheckBox({
+					checked: "RadioButton-16 RadioButton-checked-16",
+					unchecked: "RadioButton-16 RadioButton-unchecked-16"
+				});
+				*/
+
+				field = new RadioButtonGroup();
+				field.setContainer(document.body);
+				field.setCss(new RadioButtonGroup.Css());
+				field.setOptions([
+					{ value: 1, text: "uno" },
+					{ value: 2, text: "dos" },
+					{ value: 3, text: "tres" },
+					{ value: 4, text: "cuatro" },
+					{ value: 5, text: "cinco" }
+				]);
+				field.render();
+			});
+		</script>
+	</head>
+	<body />
+</html>

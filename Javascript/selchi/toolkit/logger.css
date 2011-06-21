@@ -1,0 +1,63 @@
+.Logger-div {
+	font-family: courier;
+	font-size: 8px;
+	background-color: white;
+	position: absolute;
+	overflow: scroll;
+	z-index: 1000;
+	height: 100%;
+	width: 100%;
+	left: 0;
+	top: 0;
+}
+.Logger-hidden {
+	display: none;
+}
+.Logger-visible {
+	display: block;
+}
+
+.Logger-key {
+	font-weight: bold;
+	color: #0F0;
+}
+.Logger-globe {
+	font-weight: bold;
+	color: #888;
+}
+.Logger-instruction {
+	color: #444;
+}
+.Logger-signature {
+	color: #008;
+}
+.Logger-method {
+	font-weight: bolder;
+	color: #A00;
+}
+.Logger-return {
+}
+.Logger-error {
+	color: #A00
+}
+.Logger-error-type {
+}
+.Logger-error-message {
+}
+
+.Logger-object-string {
+	font-weight: bold;
+	color: #0D0;
+}
+.Logger-object-number {
+	font-weight: bolder;
+	color: #00F;
+}
+.Logger-object-null {
+	font-weight: bolder;
+	color: #A44;
+}
+.Logger-object-undefined {
+	font-weight: bolder;
+	color: #A44;
+}
