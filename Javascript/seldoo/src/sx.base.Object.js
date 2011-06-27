@@ -1,0 +1,2 @@
+sx.base.Object = (function() {
+});
