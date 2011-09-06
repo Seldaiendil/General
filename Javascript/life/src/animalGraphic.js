@@ -81,7 +81,7 @@
 		this.hold.appendChild(this.body);
 		this.hold.appendChild(this.head);
 		
-		/*
+		
 		var self = this;
 		this.eventOver = Event.add(this.head, 'mouseover', function() {
 			self.head.innerHTML = "\n<br>" + self.id;
@@ -89,7 +89,7 @@
 		this.eventOut = Event.add(this.head, 'mouseout', function() {
 			self.head.innerHTML = "";
 		});
-		*/
+		
 
 		this.refresh()
 	};
