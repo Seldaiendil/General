@@ -1,0 +1,316 @@
+{
+  "include" :
+  [
+    {
+      "path" : "${QOOXDOO_PATH}/tool/data/config/application.json"
+    },
+
+    {
+      "path" : "image.json"
+    }
+  ],
+
+  "export":
+  [
+    "api",
+    "api-data",
+    //"build-all",
+    "clean",
+    "distclean",
+    "fix",
+    "images",
+    "lint",
+    "lint-test",
+    "provider",
+    "test",
+    "test-inline",
+    "test-source",
+    "test-performance",
+    "test-performance-source",
+    "translation",
+    "qxoo-build",
+    "qxoo-noopt",
+    "qxoo-api"
+  ],
+
+
+  "let" :
+  {
+    "APPLICATION"  : "qx",
+    "QOOXDOO_PATH" : "..",
+    "API_EXCLUDE"  : ["qx.test.*"],
+    "TEST_INCLUDE" : "qx.test.*",
+    "LOCALES"      : [ "de", "en", "es", "fr", "it", "nl", "no", "sv","ro", "pl" ],
+    "CACHE"        : "${TMPDIR}/qx${QOOXDOO_VERSION}/cache"
+  },
+
+  "config-warnings" :
+  {
+    "job-shadowing" : 
+    [
+      "common",
+      "lint",
+      "test",
+      "test-source",
+      "test-inline",
+      "testrunner::tests-common",
+      "translation"
+    ]
+  },
+
+  "jobs":
+  {
+
+    "qxoo" : 
+    {
+      "library" :
+      [
+        {
+          "manifest" : "${QOOXDOO_PATH}/framework/Manifest.json",
+          "uri" : ".."          
+        }
+      ],
+
+      "extend" : [ "cache" ],
+      
+      "include" : 
+      [
+        "qx.Class",
+        "qx.Mixin",
+        "qx.Interface"
+      ],
+      
+      "exclude" :
+      [
+        "qx.event.GlobalError"
+      ],
+
+      "environment" :
+      {
+        "qx.debug" : false,
+        "qx.aspects" : false,
+        "qx.globalErrorHandling" : false
+      },
+
+      "compile-options" :
+      {
+        "paths" :
+        {
+          "loader-template" : "../tool/data/generator/oo.loader.tmpl.js"
+        },
+        "uris" :
+        {
+          "script"   : ".",
+          "resource" : "."
+        }
+      }
+    },
+
+
+    "qxoo-build" : 
+    {
+      "desc" : "a basic qooxdoo OO library",
+      "extend" : [ "qxoo" ],
+      
+      "compile-options" :
+      {
+        "paths" :
+        {
+          "file" : "build/script/qx-oo.js"
+        },
+        "code" :
+        {
+          "format"   : true,
+          "optimize" : [ "variables", "basecalls", "privates", "strings", "variants" ]
+        }
+      },
+      "compile" : { "type" : "build" }
+    },
+    
+    
+    "qxoo-noopt" : 
+    {
+      "desc" : "a basic qooxdoo OO library (non-optimized)",
+      "extend" : [ "qxoo" ],
+      
+      "compile-options" :
+      {
+        "paths" :
+        {
+          "file" : "build/script/qx-oo-noopt.js"
+        },
+        "code" :
+        {
+          "format"   : true,
+          "optimize" : [ ]
+        }
+      },
+      "compile" : { "type" : "build" }
+    },
+
+
+    "qxoo-api" :
+    {
+      "desc" : "create api doc for qxoo",
+      "extend" : [ "apiconf::build" ],
+      "let" :
+      {
+        "APIVIEWER_ROOT" : "${QOOXDOO_PATH}/component/apiviewer",
+        "BUILD_PATH"     : "${ROOT}/qxoo_api",
+        "API_INCLUDE"    : ["qx.Class", "qx.Mixin", "qx.Interface"],
+        "API_EXCLUDE"    : ["qx.test.*", "qx.event.GlobalError"]
+      }
+    },
+    
+    
+    "build-all" :
+    {
+      "library" :
+      [
+        {
+          "manifest" : "Manifest.json"
+        }
+      ],
+
+      "extend" : [ "cache" ],
+
+      "include": ["qx.*"],
+      "exclude": ["=qx.test.*"],
+
+      "environment" :
+      {
+        "qx.debug" : true,
+        "qx.aspects" : false
+      },
+
+      "compile-options" :
+      {
+        "paths" :
+        {
+          "file"     : "build/script/qx.js"
+        },
+        "code"  :
+        {
+          "format"   : "on",
+          "optimize" : ["basecalls", "variables", "privates", "strings"]
+        }
+      },
+      
+      "compile" : { "type" : "build" },
+
+      "copy-resources" :
+      {
+        "target" : "build"
+      }
+    },
+
+
+    // -- Test Jobs ------------------------------------------------------------
+
+    // This one is used in all jobs relating to the generated AUT
+    "testrunner::tests-common" : 
+    {
+      "environment" :
+      {
+        "qx.test.bool_true" : true,
+        "qx.test.bool_false" : false
+      }
+    },
+
+    "test" :
+    {
+      "run" : ["test-copy-files"],
+
+      "let" :
+      {
+        "LOCALES" : ["de", "de_DE", "en", "en_GB", "en_US"],
+        "TEST_EXCLUDE" : "qx.test.performance.*"
+      }
+    },
+    
+    "test-inline" :
+    {
+      "run" : ["test-copy-files"],
+
+      "let" :
+      {
+        "LOCALES" : ["de", "de_DE", "en", "en_GB", "en_US"],
+        "TEST_EXCLUDE" : "qx.test.performance.*"
+      }
+    },
+
+    "test-copy-files" :
+    {
+      "extend" : [ "cache" ],
+
+      "copy-files" :
+      {
+        "files"    : [ "test" ],
+        "source"   : "source/resource/qx",
+        "target"   : "test/resource/qx"
+      }
+    },
+
+
+    "test-source" :
+    {
+      "let" :
+      {
+        "LOCALES" : ["de", "de_DE", "en", "en_GB", "en_US"],
+        "TEST_EXCLUDE" : "qx.test.performance.*"
+      }
+    },
+    
+    "test-performance" :
+    {
+      "desc" : "Create a Performance Test Runner for the qx.test.performance namespace",
+      
+      "extend" : ["testrunner::build"],
+      
+      "let" :
+      {
+        "TESTRUNNER_VIEW" : "testrunner.view.Performance",
+        "TESTRUNNER_ROOT" : "${QOOXDOO_PATH}/component/testrunner",
+        "TEST_INCLUDE"    : "qx.test.performance.*",
+        "TEST_EXCLUDE"    : "",
+        "BUILD_PATH"      : "${ROOT}/test-performance"
+      }
+    },
+    
+    "test-performance-source" :
+    {
+      "desc" : "Create a Performance Test Runner for the qx.test.performance namespace",
+      
+      "extend" : ["testrunner::build-with-tests-source"],
+      
+      "let" :
+      {
+        "TESTRUNNER_VIEW" : "testrunner.view.Performance",
+        "TESTRUNNER_ROOT" : "${QOOXDOO_PATH}/component/testrunner",
+        "TEST_INCLUDE"    : "qx.test.performance.*",
+        "TEST_EXCLUDE"    : "",
+        "BUILD_PATH"      : "${ROOT}/test-performance"
+      }
+    },
+
+    "images" :
+    {
+      "run" : [ "image-clipping", "image-combine" ]
+    },
+
+    "lint" :
+    {
+      "exclude": ["=qx.test.*", "=qx.dev.unit.Sinon"]
+    },
+
+    "lint-test" :
+    {
+      "include": ["=qx.test.*"]
+    },
+
+    "translation" :
+    {
+      "=include": ["qx.*"]
+    }
+  }
+}
