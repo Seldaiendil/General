@@ -1,140 +1,177 @@
-qx.Class.define('bio.phisics.Vector', {
+qx.Class.define('bio.phisics.Vector', { extend: qx.core.Object });
+bio.phisics.Vector = (function() {
 
-	extend: qx.core.Object,
-	
-	implement: bio.phisics.IVector,
 
-	construct: function(x, y) {
+	var Assert = qx.core.Assert;
+	var decimalsCache = {};
+
+
+	function Vector(x, y) {
+		this.x = this.y = NaN;
 		var len = arguments.length;
 		if (len > 0) {
-			if (len === 1) {
-				y = x;
+			this.x = x;
+			if (len > 1) {
+				this.y = y;
 			}
-			this.setX(x);
-			this.setY(y);
 		}
-	},
-
-	properties: {
-		
-		x: {
-			event: 'changeX',
-			check: 'Number',
-			init: 0
-		},
-		
-		y: {
-			event: 'changeY',
-			check: 'Number',
-			init: 0
-		}
-
-	},
-
-
-	members: {
-
-		/**
-		 * @lint ignoreReferenceField(__roundCache)
-		 */
-		__roundCache: {},
-		
-		isZero: function() {
-			return this.getX() === 0 && this.getY() === 0;
-		},
-
-		copy: function() {
-			return new bio.phisics.Vector(this.getX(), this.getY());
-		},
-
-		equals: function(vector) {
-			return this.getX() === vector.getX() && this.getY() === vector.getY();
-		},
-
-
-		merge: function(vector) {
-			this.setX(this.getX() + vector.getX());
-			this.setY(this.getY() + vector.getY());
-			return this;
-		},
-
-		diff: function(vector) {
-			return new bio.phisics.Vector(
-				this.getX() - vector.getX(),
-				this.getY() - vector.getY()
-			);
-		},
-
-
-		add: function(value) {
-			this.setX(this.getX() + value);
-			this.setY(this.getY() + value);
-			return this;
-		},
-
-		multiply: function(value) {
-			this.setX(this.getX() * value);
-			this.setY(this.getY() * value);
-			return this;
-		},
-
-
-		abs: function() {
-			this.setX(Math.abs(this.getX()));
-			this.setY(Math.abs(this.getY()));
-			return this;
-		},
-
-		round: function(decimals) {
-			var operator = this.__roundCache[decimals];
-			if (typeof operator === 'undefined') {
-				var dec = arguments.length === 0 ? 2 : decimals;
-				operator = Math.pow(10, dec);
-				this.__roundCache[decimals] = operator;
-			}
-			this.setX(Math.round(this.getX() * operator) / operator);
-			this.setY(Math.round(this.getY() * operator) / operator);
-			return this;
-		},
-
-
-		getHypotenuse: function() {
-			if (this.isZero()) {
-				return 0;
-			}
-			return Math.sqrt(Math.pow(this.getX(), 2) + Math.pow(this.getY(), 2), 2);
-		},
-
-		getAngleRadians: function() {
-			if (this.isZero()) {
-				return 0;
-			}
-
-			var arctan = Math.atan(this.getY() / this.getX());
-			if (arctan < 0) {
-				arctan += Math.PI;
-			}
-
-			if (this.getY() < 0 || (this.getY() === 0 && this.getX < 0)) {
-				arctan += Math.PI;
-			}
-
-			return arctan;
-		},
-
-		getAngle: function() {
-			var angle = this.getAngleRadians() / Math.PI * 180;
-			while (angle < 0) {
-				angle += 360
-			}
-			return angle % 360;
-		},
-
-
-		toString: function() {
-			return this.base(arguments) + ' { x: ' + this.getX() + ', y: ' + this.getY() + ', }';
-		}
-
 	}
 
-});
+
+	Vector.prototype.getX = function() {
+		return this.x;
+	};
+	Vector.prototype.setX = function(value) {
+		if (qx.core.Environment.get('qx.debug')) {
+			Assert.assertNumber(value, 'Value is not a number');
+			if (isNaN(value)) {
+				throw new qx.core.AssertionError('value is NaN');
+			}
+		}
+		this.x = value;
+	};
+
+
+	Vector.prototype.getY = function() {
+		return this.y;
+	};
+	Vector.prototype.setY = function(value) {
+		if (qx.core.Environment.get('qx.debug')) {
+			Assert.assertNumber(value, 'Value is not a number');
+			if (isNaN(value)) {
+				throw new qx.core.AssertionError('value is NaN');
+			}
+		}
+		this.y = value;
+	};
+
+
+	Vector.prototype.equals = function(target) {
+		if (qx.core.Environment.get('qx.debug')) {
+			Assert.assertInstance(target, Vector, 'Target is not instance of bio.phisics.Vector');
+		}
+
+		return this.x === target.x && this.y === target.y;
+	};
+
+
+	Vector.prototype.copy = function() {
+		return new Vector(this.x, this.y);
+	};
+
+
+	Vector.prototype.isZero = function() {
+		return this.x === 0 && this.y === 0;
+	};
+
+
+	Vector.prototype.round = function(decimals) {
+		if (!(decimals in decimalsCache)) {
+			var dec = arguments.length > 0 ? decimals : 2;
+			decimalsCache[decimals] = Math.pow(10, dec);
+		}
+
+		var operator = decimalsCache[decimals];
+		this.x = Math.round(this.x * operator) / operator;
+		this.y = Math.round(this.y * operator) / operator;
+		return this;
+	};
+
+
+	Vector.prototype.abs = function() {
+		this.x = Math.abs(this.x);
+		this.y = Math.abs(this.y);
+		return this;
+	};
+
+
+	Vector.prototype.add = function(value) {
+		if (qx.core.Environment.get('qx.debug')) {
+			Assert.assertNumber(value, 'Value is not a number');
+			if (isNaN(value)) {
+				throw new qx.core.AssertionError('value is NaN');
+			}
+		}
+
+		this.x += value;
+		this.y += value;
+		return this;
+	};
+
+
+	Vector.prototype.multiply = function(value) {
+		if (qx.core.Environment.get('qx.debug')) {
+			Assert.assertNumber(value, 'Value is not a number');
+			if (isNaN(value)) {
+				throw new qx.core.AssertionError('value is NaN');
+			}
+		}
+
+		this.x *= value;
+		this.y *= value;
+		return this;
+	};
+
+
+	Vector.prototype.merge = function(target) {
+		if (qx.core.Environment.get('qx.debug')) {
+			Assert.assertInstance(target, Vector, 'Target is not instance of bio.phisics.Vector');
+		}
+
+		this.x += target.x;
+		this.y += target.y;
+		return this;
+	};
+
+
+	Vector.prototype.diff = function(target) {
+		if (qx.core.Environment.get('qx.debug')) {
+			Assert.assertInstance(target, Vector, 'Target is not instance of bio.phisics.Vector');
+		}
+
+		return new Vector(
+			this.x - target.x,
+			this.y - target.y
+		);
+	};
+
+
+	Vector.prototype.getHypotenuse = function() {
+		if (this.isZero()) {
+			return 0;
+		}
+		return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2), 2)
+	};
+
+
+	Vector.prototype.getAngleRadians = function() {
+		if (this.isZero()) {
+			return 0;
+		}
+		var arctan = Math.atan(this.y / this.x);
+		if (arctan < 0) {
+			arctan += Math.PI;
+		}
+		if (this.y < 0 || (this.y === 0 && this.x < 0)) {
+			arctan += Math.PI;
+		}
+		return arctan;
+	};
+
+
+	Vector.prototype.getAngle = function() {
+		var angle = this.getAngleRadians() / Math.PI * 180;
+		while (angle < 0) {
+			angle += 360;
+		}
+		return angle % 360;
+	};
+
+
+	Vector.prototype.toString = function() {
+		return "[class bio.phisics.Vector] { x: " + this.x + ", y: " + this.y + " }";
+	};
+
+
+	return Vector;
+})();

@@ -1,36 +1,40 @@
 ﻿var PerformanceTest = (function() {
+
+
 	function PerformanceTest() {
-		this.methods = [
-			function() { },
-			function() { }
-		];
+		this.methods = [];
 		this.results = [];
 		this.averages = [];
-		this.density = 10000;
+		this.density = 1;
 		this.repetitions = 5;
 	}
+
+
 	PerformanceTest.prototype.reset = function() {
 		this.results = [];
 		this.averages = [];
 	};
+
+
 	PerformanceTest.prototype.run = function() {
 		var method, start, lapse, i, j, k;
+
 		this.reset();
-		for (var i=this.methods.length; i--; )
+		buildExecute(this.density);
+
+		for (i=this.methods.length; i--; )
 			this.results[i] = [];
-		for (i=this.repetitions; i--; ) {
-			for (var j=this.methods.length; j--; ) {
-				method = this.methods[j];
-				start = new Date();
-				for (var k=this.density; k--; )
-					method();
-				lapse = new Date() - start;
-				this.results[j][i] = lapse;
-			}
-		}
+		
+		for (i=this.repetitions; i--; )
+			for (j=this.methods.length; j--; )
+				this.results[j][this.repetitions - i - 1] = execute(this.methods[j]);
+
+		
 		for (i=this.methods.length; i--; )
 			this.averages[i] = calcAverage(this.results[i]);
 	};
+
+
 	PerformanceTest.prototype.print = function() {
 		var container = ce('table');
 		container.border = 1;
@@ -42,6 +46,7 @@
 		return container;
 	};
 	
+
 	function printRow(thInnerHtml, contentType, contentValue) {
 		var tr = ce('tr');
 		var td = ce('th');
@@ -54,9 +59,12 @@
 		}
 		return tr;
 	}
+
+
 	function ce(tag) {
 		return document.createElement(tag);
 	}
+
 	
 	function calcAverage(dataList) {
 		var sum = 0;
@@ -64,6 +72,17 @@
 			sum += dataList[i];
 		return sum / dataList.length;
 	}
-	
+
+
+	var execute = function() { throw new Error() };
+	function buildExecute(density) {
+		var code = 'var start = new Date();\n';
+		for (var i = density * 1000; i--; )
+			code += 'method();\n';
+		code += 'return new Date() - start;';
+		execute = new Function('method', code);
+	}
+
+
 	return PerformanceTest;
 })();

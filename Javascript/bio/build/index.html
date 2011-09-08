@@ -3,42 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>bio</title>
-
-		<script type="text/javascript">
-			var load = {
-				qooxdoo: false,
-				selchi: false
-			};
-
-			function testLoad() {
-				console.log(JSON.stringify(load));
-				if (load.qooxdoo && load.selchi)
-					start();
-			}
-
-			function start() {
-				var test = new PerformanceTest();
-
-				var cosa = {
-					temp: {
-						Force: Force
-					}
-				}
-
-				test.methods = [
-					function qooxdooClass() {
-						new bio.phisics.Force(30, 40).getVector().getHypotenuse();
-					},
-					function javascriptClass() {
-						new cosa.temp.Force(30, 40).getVector().getHypotenuse();
-					},
-				];
-				test.density *= 2;
-				test.run();
-				test.print();
-			}
-
-		</script>
+		<script type="text/javascript" src="../performance.js"></script>
 
 		<script type="text/javascript" src="script/bio.js"></script>
 
