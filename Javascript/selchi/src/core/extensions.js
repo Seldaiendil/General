@@ -15,7 +15,7 @@ if (!Function.prototype.bind)
 Function.prototype.bind = function(scope) {
 	var self = this;
 	return function() {
-		self.apply(scope, arguments);
+		return self.apply(scope, arguments);
 	};
 };
 
