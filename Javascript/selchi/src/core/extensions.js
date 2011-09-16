@@ -5,10 +5,13 @@ Function.prototype.extend = function(childClass) {
 		self.apply(this, arguments);
 		childClass.apply(this, arguments);
 	}
-	extension._pepe_ = childClass.name;
-	extension.prototype = new this();
-	extension.prototype.constructor = extension;
-	extension.prototype._base_ = new this();
+	
+	var intermediate = function() { };
+	intermediate.prototype = this.prototype;
+	
+	extension.prototype = new intermediate();
+	extension.prototype._base_ = new intermediate();
+	
 	return extension;
 };
 if (!Function.prototype.bind)
