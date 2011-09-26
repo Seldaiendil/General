@@ -39,9 +39,7 @@ qx.Class.define("bio.Application",
      */
     main : function()
     {
-      bio.phisics.Force;
-      load.qooxdoo = true;
-      testLoad();
+      bio.controller.Plant;
     }
   }
 });

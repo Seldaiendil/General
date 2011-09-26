@@ -42,7 +42,8 @@
     "API_EXCLUDE"  : ["qx.test.*", "${APPLICATION}.theme.*", "${APPLICATION}.test.*", "${APPLICATION}.simulation.*"],
     "LOCALES"      : [ "en" ],
     "CACHE"        : "${TMPDIR}/qx${QOOXDOO_VERSION}/cache",
-    "ROOT"         : "."
+    "ROOT"         : ".",
+    "SELCHI_PATH"  : "../../selchi/src"
   },
 
   // You only need to edit the remainder of this file, if you want to customize
@@ -50,36 +51,25 @@
 
   "jobs" :
   {
-    // Uncomment the following entry to add a contrib or library to your
-    // project; make sure to adapt the path to the Manifest.json; if you are
-    // using a contrib: library, it will be downloaded into the path specified
-    // by the 'cache/downloads' config key
-    /*
-    "libraries" : 
-    {
-      "library" :
-      [
-        {
-          "manifest" : "contrib://SkeletonApplication/trunk/Manifest.json"
-        }
+    "source-script": {
+      "add-script": [
+        "${SELCHI_PATH}/core/extensions.js",
+        "${SELCHI_PATH}/core/core.js",
+        "${SELCHI_PATH}/core/event.js",
+        "${SELCHI_PATH}/classes/vector.js",
+        "${SELCHI_PATH}/classes/force.js",
+        "${SELCHI_PATH}/classes/phisics.js"
+      ]
+    },
+    "build-script": {
+      "add-script": [
+        "${SELCHI_PATH}/core/extensions.js",
+        "${SELCHI_PATH}/core/core.js",
+        "${SELCHI_PATH}/core/event.js",
+        "${SELCHI_PATH}/classes/vector.js",
+        "${SELCHI_PATH}/classes/force.js",
+        "${SELCHI_PATH}/classes/phisics.js"
       ]
     }
-    */
-
-    // If you want to tweak a job setting, see the following sample where
-    // the "format" feature of the "build-script" job is overridden.
-    // To see a list of available jobs, invoke 'generate.py x'.
-	/*
-    ,"build-script" :
-    {
-      "compile-options" : 
-      {
-        "code" :
-        {
-          "format" : false
-        }
-      }
-    }
-    */
   }
 }

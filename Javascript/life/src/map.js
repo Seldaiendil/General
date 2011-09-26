@@ -59,9 +59,6 @@ var Map = (function() {
 		this.y = y;
 	}
 	Cell.property('elements', true);
-	Cell.prototype.getX = function() {
-		return this.location.x;
-	};
 	Cell.prototype.get = function(index) {
 		return this.elements[index];
 	};
