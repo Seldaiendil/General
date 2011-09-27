@@ -1,0 +1,41 @@
+<html>
+	<head>
+		<title>Life Game</title>
+
+		<script type="text/javascript" src="oo.js"></script>
+
+		<script type="text/javascript" src="physic/Vector.js"></script>
+		<script type="text/javascript" src="physic/Force.js"></script>
+		<script type="text/javascript" src="physic/PhysicObject.js"></script>
+
+		<script type="text/javascript">
+
+			oo.Class("bio.controller.Animal", {
+				constructor: function Animal() {
+					this.base(arguments);
+				},
+
+				grown: function() {
+					console.log("Animal is growing");
+				}
+			});
+
+			bio.controller.Animal.extend("bio.controller.Dog", {
+				constructor: function Dog() { },
+
+				grown: function() {
+					this.base(arguments);
+					console.log("Dog is growing");
+				}
+			});
+
+
+			var pet = new bio.controller.Dog();
+			pet.grown();
+
+			new bio.physic.PhysicObject();
+
+		</script>
+	</head>
+	<body />
+</html>
