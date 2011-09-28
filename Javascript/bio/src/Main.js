@@ -4,7 +4,10 @@
 function getScreenSize() {
 	var size = new bio.physic.Vector(document.body.clientWidth, document.body.clientHeight);
 	getScreenSize = function() {
-		return size;
+		return new bio.physic.Vector(
+			500,
+			200
+		);
 	};
 	return getScreenSize();
 }
@@ -36,7 +39,7 @@ function reproduceAnimal(parent) {
  */
 bio.controller.Map.prototype.configure = function() {
 	var screen = getScreenSize();
-	this.setCellSize(10);
+	this.setCellSize(100);
 	this.setColumns(Math.ceil(screen.x / this.getCellSize()));
 	this.setRows(Math.ceil(screen.y / this.getCellSize()));
 	this.reset();
@@ -81,9 +84,9 @@ bio.animal.cell.Vegetarian.prototype.configure = function(onReproduce) {
 
 
 Class('bio.Main', {
-	PLANTAS: 100,
-	VEGETARIANOS: 50,
-	CARNIVOROS: 10, 
+	PLANTAS: 1,
+	VEGETARIANOS: 1,
+	CARNIVOROS: 0, 
 
 
 	constructor: function() {
@@ -93,11 +96,13 @@ Class('bio.Main', {
 		canvas.setAttribute('height', screen.y + 'px');
 		document.body.appendChild(canvas);
 
+		this.onPlantDie = this.onPlantDie.bind(this);
+		this.onCellReproduce = this.onCellReproduce.bind(this);
+
 		var map = new bio.controller.Map().configure();
 		var al = new bio.ArtificialLife(map);
 
-		this.onPlantDie = this.onPlantDie.bind(this);
-		this.onCellReproduce = this.onCellReproduce.bind(this);
+		al.setStep(300);
 
 		al.add(this.PLANTAS,		this.createPlant.bind(this));
 		al.add(this.VEGETARIANOS,	this.createVegetarian.bind(this));

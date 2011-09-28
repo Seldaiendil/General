@@ -1,11 +1,15 @@
 (function() {
 
+	function printItems() {
+		return '[' + this.constructor.name + ' { ' + this.items.join(',') + ' }]';
+	}
+
 	// Cell private class
 	var Cell = Class({
 		constructor: function MapCell(x, y) {
 			this.location = new bio.physic.Vector(x, y);
-			this.byId = [];
-			this.elements = [];
+			this.byId = {};
+			this.items = [];
 			this.smells = [];
 			this.nutrients = 1.0
 			this.x = x;
@@ -14,15 +18,15 @@
 
 
 		getElements: function() {
-			return this.elements;
+			return this.items;
 		},
 
 		length: function() {
-			return this.elements.length;
+			return this.items.length;
 		},
 
 		get: function(index) {
-			return this.elements[index];
+			return this.items[index];
 		},
 
 		extractNutrients: function(factor) {
@@ -38,7 +42,7 @@
 
 		push: function(element) {
 			if (!this.byId[element.getId()]) {
-				this.elements[this.elements.length] = element;
+				this.items[this.items.length] = element;
 				this.byId[element.getId()] = true;
 			}
 			return this;
@@ -46,11 +50,13 @@
 
 		remove: function(element) {
 			if (this.byId[element.getId()]) {
-				this.elements.splice(this.elements.indexOf(element), 1);
+				this.items.splice(this.items.indexOf(element), 1);
 				this.byId[element.getId()] = false;
 			}
 			return this;
-		}
+		},
+
+		toString: printItems
 	});
 
 
@@ -80,7 +86,7 @@
 		},
 
 		push: function(element) {
-			if (typeof this.byId[element.getId()] !== 'number')
+			if (typeof this.byId[element.getId()] === 'number')
 				return;
 			
 			var index = this.items.length;
@@ -102,7 +108,9 @@
 		merge: function(array) {
 			for (var i=array.length; i--; )
 				this.push(array[i]);
-		}
+		},
+
+		toString: printItems
 	});
 
 
@@ -196,6 +204,7 @@
 			this.byId[element.getId()] = index;
 
 			element.addListener('move', this.updateLocation, this);
+			element.addListener('reproduce', this._elementReproduce, this);
 			element.addListener('destroy', this.removeElement, this);
 
 			return this;
@@ -207,6 +216,7 @@
 			this.byId[id] = null;
 
 			element.removeListener('move', this.updateLocation, this);
+			element.removeListener('reproduce', this._elementReproduce, this);
 			element.removeListener('destroy', this.removeElement, this);
 
 			var lastLocations = this.locations[element.getId()];
@@ -216,7 +226,14 @@
 			return this;
 		},
 
+		_elementReproduce: function(parent, child1, child2) {
+			this.addElement(child1);
+			this.addElement(child2);
+		},
+
 		updateLocation: function(element) {
+			this._roundMap(element);
+
 			var lastLocations = this.locations[element.getId()];
 			var currentLocations = this.getElementCells(element);
 			this.locations[element.getId()] = currentLocations;
@@ -230,6 +247,23 @@
 				currentLocations[i].push(element);
 
 			return this;
+		},
+
+		_roundMap: function(element) {
+			var x = element.getX(),
+				y = element.getY(),
+				width = this.width,
+				height = this.height;
+
+			if (x < 0)
+				element.setX(width + x);
+			else if (x > width)
+				element.setX(x % width);
+			
+			if (y < 0)
+				element.setY(height + y);
+			else if (y > height)
+				element.setY(y % height);
 		},
 
 		_calcRange: function(start, end, size) {
@@ -298,11 +332,11 @@
 			var diff = location.diff(target.location);
 
 			// if distance is bigger than half map, it will be shorter by a lateral of the map
-			if (Math.abs(diff.x) > this.cache.halfSize.x)
-				location.x += this.cache.size.x * this._getSigne(diff.x * -1);
+			if (Math.abs(diff.x) > this.halfWidth)
+				location.x += this.halfWidth * this._getSigne(diff.x * -1);
 
-			if (Math.abs(diff.y) > this.cache.halfSize.y)
-				location.y += this.cache.size.y * this._getSigne(diff.y * -1);
+			if (Math.abs(diff.y) > this.halfHeight)
+				location.y += this.halfHeight * this._getSigne(diff.y * -1);
 
 			return location;
 		},
@@ -359,6 +393,7 @@
 
 		tick: function(context) {
 			context.clearRect(0, 0, this.width, this.height);
+			context.strokeRect(0, 0, this.width, this.height);
 
 			var items = this.items;
 			for (var i = items.length; i--; ) {

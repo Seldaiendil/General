@@ -25,7 +25,7 @@ bio.physic.PhysicObject.extend('bio.controller.LifeForm', {
 	},
 
 	addChild: function(child) {
-		child.parents.push(parent);
+		child.parents.push(this);
 	},
 
 	isChildOf: function(parent) {
@@ -65,7 +65,7 @@ bio.physic.PhysicObject.extend('bio.controller.LifeForm', {
 	},
 
 	destroy: function() {
-		this.fireEvent('destroy');
+		this.fireEvent('destroy', this);
 
 		var keys = Object.keys(this);
 		for (var i = keys.length; i--; ) {
@@ -79,6 +79,6 @@ bio.physic.PhysicObject.extend('bio.controller.LifeForm', {
 			this.garbageCollector();
 		this.count++;
 
-		this.view.render(context, this.location, this.size, this.movement);
+		this.view.render(context, this.location, this.size, this.movement, this);
 	}
 });

@@ -6,7 +6,9 @@ bio.controller.LifeForm.extend('bio.controller.Plant', {
 	},
 
 
-	tick: function() {
+	tick: function(map, context) {
+		this.base(arguments, context);
+
 		if (this.getArea() > 100)
 			return;
 		

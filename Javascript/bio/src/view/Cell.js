@@ -1,5 +1,5 @@
 Class('bio.view.Cell', {
-	constructor: function() {
+	constructor: function CellView() {
 		this.colorSeed = 10;
 		this.baseColor = { r: 0, g: 0, b: 0 };
 		this.rgbColor = {};
@@ -39,8 +39,9 @@ Class('bio.view.Cell', {
 		var positionDiff = sizeDiff / 2;
 
 		context.save();
-
 		context.translate(location.x, location.y);
+
+		context.save();
 		context.rotate(movement.getDirectionRadians());
 
 		context.lineWidth = 2;
@@ -69,6 +70,8 @@ Class('bio.view.Cell', {
 		// Draw head
 		context.strokeRect(next.x, next.y, size.x - sizeDiff, size.y - sizeDiff);
 		context.fillRect(next.x, next.y, size.x - sizeDiff, size.y - sizeDiff);
+
+		context.restore();
 
 		var multiplier = 30;
 		context.translate(size.x / 2, size.y / 2);

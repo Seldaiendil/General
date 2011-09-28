@@ -35,7 +35,10 @@ var oo = (function(ns) {
 			base = Base;
 		}
 
-		var clazz = config.constructor || function() { this.base(arguments); };
+		var clazz = config.constructor
+		if (clazz === Object)
+			clazz = function() { this.base(arguments); };
+		
 		delete config.constructor;
 		clazz.__proto__ = BaseClass;
 		clazz.base = base;
@@ -71,7 +74,7 @@ var oo = (function(ns) {
 			}
 
 			current[name] = clazz;
-			clazz.name = name;
+			clazz.className = name;
 			clazz.fullname = fullname;
 			clazz.namespace = current;
 		}
@@ -158,7 +161,7 @@ var oo = (function(ns) {
 		},
 
 		toString: function() {
-			return '[' + this.constructor.name + ' ' + this.__id__ + ']';
+			return '[' + this.constructor.className + ' ' + this.__id__ + ']';
 		}
 	};
 

@@ -46,7 +46,7 @@ bio.controller.LifeForm.extend('bio.controller.Animal', {
 	},
 
 	fight: function(target) {
-		if (target instanceof Animal)
+		if (target instanceof bio.controller.Animal)
 			return this.getArea() > target.getArea();
 		return true;
 	},
@@ -73,19 +73,21 @@ bio.controller.LifeForm.extend('bio.controller.Animal', {
 		};
 
 		var neighbors = map.getRangeFromElement(this, this.size.x * this.factor['visibility']);
-		for (var i = neighbors.length; i--; ) {
-			this.seeObject(neighbors[i], map, closer);
+
+		console.debug(neighbors.toString());
+		for (var i = neighbors.length(); i--; ) {
+			this.seeObject(neighbors.get(i), map, closer);
 		}
 
 		var food = closer.food.target;
 		var predator = closer.predator.target;
 		if (food) {
 			this.shove(this.angle(food),
-				(this.factor['max velocity hunting'] / this.closer.food.distance) * this.factor['velocity']
+				(this.factor['max velocity hunting'] / closer.food.distance) * this.factor['velocity']
 			);
 		} else if (predator) {
 			this.shove(predator.angle(this),
-				(this.factor['max velocity escaping'] / this.closer.predator.distance) * this.factor['velocity']
+				(this.factor['max velocity escaping'] / closer.predator.distance) * this.factor['velocity']
 			);
 		}
 	},
@@ -96,7 +98,7 @@ bio.controller.LifeForm.extend('bio.controller.Animal', {
 		if (this.isFood(target)) {
 			this.hunt(target, distance, closer.food);
 		} else {
-			if (target instanceof Animal &&
+			if (target instanceof bio.controller.Animal &&
 				target.isFood(this) &&
 				target.fight(this) &&
 				distance < closer.predator.distance) {

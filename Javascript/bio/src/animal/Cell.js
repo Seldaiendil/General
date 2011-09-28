@@ -16,6 +16,7 @@ bio.controller.Animal.extend('bio.animal.Cell', {
 
 	tick: function(map, context) {
 		if (this.canReproduce()) {
+			debugger;
 			this.reproduce();
 			return;
 		}
@@ -33,13 +34,13 @@ bio.controller.Animal.extend('bio.animal.Cell', {
 	},
 
 	canReproduce: function() {
-		return this.getArea() > this.factor['reproduce if size bigger'];
+		return this.getArea() > this.factor['reproduce at size'];
 	},
 
 	reproduce: function() {
 		var child1 = this._createChild();
 		var child2 = this._createChild();
-		if (!(child1 instanceof Animal) || !(child2 instanceof Animal))
+		if (!(child1 instanceof bio.controller.Animal) || !(child2 instanceof bio.controller.Animal))
 			throw new Error("childConstructor returns --[" + child + "]-- (" + (typeof child) + ")");
 		
 		var direction = Math.round(Math.random() * 380);
@@ -59,6 +60,7 @@ bio.controller.Animal.extend('bio.animal.Cell', {
 		var child = new this.constructor();
 		child.setPosition(this.location.x, this.location.y);
 		child.setSize(this.size.x / 2, this.size.y / 2);
+		child.setView(new this.view.constructor());
 		this.addChild(child);
 		return child;
 	}

@@ -39,13 +39,12 @@ Class('bio.ArtificialLife', {
 		return this;
 	},
 
-	add: function(number, clazz) {
+	add: function(number, constructor) {
 		for (var i = number; i--; )
-			this.map.addElement(new clazz().configure());
+			this.map.addElement(constructor());
 	},
 
 	tick: function() {
-		debugger;
 		this.map.tick(this.context);
 
 		if (this.ticks % 50 === 0)
