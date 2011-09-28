@@ -1,10 +1,15 @@
 bio.animal.Cell.extend('bio.animal.cell.Carnivore', {
-	constructor: function() {
+	constructor: function Carnivore() {
 		this.base(arguments);
 
 		this.factor['reproduce at size'] = 14 * 14;
 
 		this.food = [ bio.animal.Cell ];
+		this.baseColor = {
+			r: 255,
+			g: 0,
+			b: NaN
+		};
 	},
 
 

@@ -1,5 +1,7 @@
 bio.controller.LifeForm.extend('bio.controller.Animal', {
-	constructor: function() {
+	constructor: function Animal() {
+		this.base(arguments);
+
 		this.food = [];
 		this.energy = 1;
 		this.boored = false;
@@ -128,17 +130,11 @@ bio.controller.LifeForm.extend('bio.controller.Animal', {
 			this.setVelocity(this.factor['max velocity']);
 	},
 
-	tick: function() {
-		if (this.canReproduce()) {
-			// The cell dies when it reproduces
-			this.reproduce();
-			return;
-		}
-
+	tick: function(map, context) {
 		if (this.isStopped())
 			this.boored = true;
 
-		this.interact();
+		this.interact(map);
 		
 		if (this.boored) {
 			// if boored move around
@@ -151,6 +147,6 @@ bio.controller.LifeForm.extend('bio.controller.Animal', {
 		this.brake(this.getVelocity() * this.factor['friction']);
 		this.move();
 		
-		this.base(arguments);
+		this.base(arguments, context);
 	}
 });

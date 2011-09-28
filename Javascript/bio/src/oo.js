@@ -40,10 +40,10 @@ var oo = (function(ns) {
 		clazz.__proto__ = BaseClass;
 		clazz.base = base;
 
-
 		function middle() { };
 		middle.prototype = base.prototype;
 		clazz.prototype = new middle();
+		clazz.prototype.constructor = clazz;
 		var baseInstance = new middle();
 
 
@@ -79,7 +79,7 @@ var oo = (function(ns) {
 		return clazz;
 	}
 
-	var BaseClass = { };
+	function BaseClass() { }
 	Class.extend = BaseClass.extend = function(fullname, config) {
 		return Class(fullname, this, config);
 	};
@@ -101,11 +101,11 @@ var oo = (function(ns) {
 			if (!args.callee.base) {
 				throw new Error(this + '.' + args.callee.name + ' Has no base method');
 			}
-			args.callee.base.apply(this, slice.call(arguments, 0, 1));
+			args.callee.base.apply(this, slice.call(arguments, 1));
 		},
 
 		getId: function() {
-			if (!this.__id__) {
+			if (typeof this.__id__ !== 'number') {
 				console.warn("Base constructor was not called on " + this);
 			}
 
@@ -121,11 +121,17 @@ var oo = (function(ns) {
 			if (!listeners)
 				return;
 			
+			var args = slice.call(arguments, 1);
 			for (var i = 0, len = listeners.length; i < len; i++)
-				listeners[i].handler.apply(listeners[i].scope, slice.call(arguments, 0, 1))
+				listeners[i].handler.apply(listeners[i].scope, args)
 		},
 
 		addListener: function(name, handler, scope) {
+			if (!this.__listeners__) {
+				debugger;
+				console.warn("Base constructor was not called on " + this);
+			}
+
 			var listeners = this.__listeners__[name];
 			if (!listeners)
 				listeners = this.__listeners__[name] = [];
@@ -157,6 +163,7 @@ var oo = (function(ns) {
 	};
 
 
+	window.Class = Class;
 	ns.Class = Class;
 	ns.Object = Base;
 	return ns;

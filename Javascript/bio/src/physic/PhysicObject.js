@@ -1,5 +1,5 @@
-oo.Class('bio.physic.PhysicObject', {
-	constructor: function(x, y, width, height) {
+Class('bio.physic.PhysicObject', {
+	constructor: function PhysicObject(x, y, width, height) {
 		this.base(arguments);
 		
 		x = x || 0;
@@ -7,9 +7,10 @@ oo.Class('bio.physic.PhysicObject', {
 		width = width || 1;
 		height = height || 1;
 
-		this.location = new bio.phisics.Vector(x, y);
-		this.size = new bio.phisics.Vector(width, height);
-		this.movement = new bio.phisics.Force(0, 0);
+		this.view = null;
+		this.location = new bio.physic.Vector(x, y);
+		this.size = new bio.physic.Vector(width, height);
+		this.movement = new bio.physic.Force(0, 0);
 
 		this.weight = 0.0;
 	},
@@ -122,15 +123,15 @@ oo.Class('bio.physic.PhysicObject', {
 		this.location.merge(this.movement.getVector());
 		if (noevent)
 			return;
-		this.fireEvent('move', this.location.x, this.location.y);
+		this.fireEvent('move', this, this.location.x, this.location.y);
 	},
 
 	shove: function(degrees, strength) {
 		var force;
-		if (degrees instanceof Force)
+		if (degrees instanceof bio.physic.Force)
 			force = degrees;
 		else
-			force = new Force(degrees, strength * (1 - this.weight));
+			force = new bio.physic.Force(degrees, strength * (1 - this.weight));
 		this.movement.merge(force);
 	},
 
@@ -146,7 +147,7 @@ oo.Class('bio.physic.PhysicObject', {
 	},
 
 	stop: function() {
-		this.movement = new Force(0, 0);
+		this.movement = new bio.physic.Force(0, 0);
 	},
 
 	isStopped: function() {

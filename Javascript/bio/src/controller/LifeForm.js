@@ -1,12 +1,16 @@
 bio.physic.PhysicObject.extend('bio.controller.LifeForm', {
-	constructor: function(x, y, width, height) {
+	constructor: function LifeForm(x, y, width, height) {
 		this.base(arguments, x, y, width, height);
 
 		this.parents = [];
 		this.dead = false;
 		this.factor = {};
+		this.view = null;
 	},
 
+
+	getView: function() { return this.view; },
+	setView: function(value) { this.view = value; },
 
 	isDead: function() {
 		return this.dead;
@@ -60,10 +64,21 @@ bio.physic.PhysicObject.extend('bio.controller.LifeForm', {
 				this.parents.splice(i, 1);
 	},
 
+	destroy: function() {
+		this.fireEvent('destroy');
+
+		var keys = Object.keys(this);
+		for (var i = keys.length; i--; ) {
+			this[keys[i]] = null;
+		}
+	},
+
 	count: 0,
-	tick: function() {
+	tick: function(context) {
 		if (this.count % 10 === 0)
 			this.garbageCollector();
-		count++;
+		this.count++;
+
+		this.view.render(context, this.location, this.size, this.movement);
 	}
 });

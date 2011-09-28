@@ -1,8 +1,8 @@
 (function() {
 
 	// Degree private class
-	var Degree = oo.Class({
-		constructor: function(value) {
+	var Degree = Class({
+		constructor: function Degree(value) {
 			this.setValue(value);
 		},
 
@@ -54,8 +54,8 @@
 		}
 	});
 
-	oo.Class('bio.physic.Force', {
-		constructor: function(degrees, strength) {
+	Class('bio.physic.Force', {
+		constructor: function Force(degrees, strength) {
 			this.direction = new Degree();
 			this.strength = NaN;
 			this.setDirection(degrees);
@@ -81,6 +81,10 @@
 
 		getDirection: function() {
 			return this.direction.getValue();
+		},
+
+		getDirectionRadians: function() {
+			return this.direction.toRadian();
 		},
 
 		setDirection: function(val) {

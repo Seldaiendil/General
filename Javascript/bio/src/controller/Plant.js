@@ -1,5 +1,5 @@
 bio.controller.LifeForm.extend('bio.controller.Plant', {
-	constructor: function() {
+	constructor: function Plant() {
 		this.base(arguments);
 
 		this.weight = 1;
