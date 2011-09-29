@@ -1,133 +1,73 @@
-(function() {
+Class('bio.physic.Force', {
+	constructor: function Force(degrees, strength) {
+		this.direction = new bio.physic.Vector(0, 0);
+		this.strength = 0;
+		this.setDirection(degrees);
+		this.setStrength(strength);
+	},
 
-	// Degree private class
-	var Degree = Class({
-		constructor: function Degree(value) {
-			this.setValue(value);
-		},
 
+	getStrength: function() {
+		return this.strength;
+	},
+	setStrength: function(val) {
+		this.strength = val;
+		this._fixStrength();
+		return this;
+	},
 
-		_fix: function() {
-			this.value = this.value || 0;
-			this.value %= 360;
+	getDirection: function() {
+		return this.direction.getAngle();
+	},
+	setDirection: function(value) {
+		this.direction.setAngle(value);
+	},
+	modifyDirection: function(addition) {
+		this.direction.setAngle(this.direction.getAngle() + addition);
+	},
 
-			if (this.value < 0)
-				this.value += 360;
-		},
+	getDirectionRadians: function() {
+		return this.direction.getAngleRadians();
+	},
+	setDirectionRadians: function(value) {
+		this.direction.setAngleRadians(value);
+	},
 
-		copy: function() {
-			return new this.constructor(this.value);
-		},
+	modifyStrength: function(addition) {
+		this.setStrength(this.getStrength() + addition);
+		return this;
+	},
 
-		add: function(val) {
-			this.value += val;
-			this._fix();
-			return this;
-		},
+	getVector: function() {
+		return this.direction.clone().multiply(this.strength);
+	},
 
-		substract: function(val) {
-			this.value -= val;
-			this._fix();
-			return this;
-		},
-
-		toRadian: function() {
-			return this.value * Math.PI / 180;
-		},
-
-		toVector: function() {
-			var radian = this.toRadian();
-			return new bio.physic.Vector(Math.cos(radian), Math.sin(radian));
-		},
-
-		getValue: function() {
-			return this.value;
-		},
-
-		setValue: function(val) {
-			this.value = val;
-			this._fix();
-		},
-
-		toString: function() {
-			return this.base(arguments) + ' ' + this.value;
+	_fixStrength: function() {
+		if (this.strength < 0) {
+			this.direction.multiply(-1);
+			this.strength *= -1;
 		}
-	});
+	},
 
-	Class('bio.physic.Force', {
-		constructor: function Force(degrees, strength) {
-			this.direction = new Degree();
-			this.strength = NaN;
-			this.setDirection(degrees);
-			this.setStrength(strength);
-		},
+	equals: function(target) {
+		return this.getDirectionRadians() === target.setDirectionRadians() &&
+			this.getStrength() === target.getStrength();
+	},
 
+	clone: function() {
+		return new this.constructor(this.getDirection(), this.getStrength());
+	},
 
-		_fixStrength: function() {
-			if (this.strength < 0) {
-				this.direction.setValue(this.direction.getValue() - 180);
-				this.strength *= -1;
-			}
-		},
+	merge: function(force) {
+		var flow = this.getVector(),
+			force = force.getVector();
+		flow.merge(force);
+		this.setDirectionRadians(flow.getAngleRadians());
+		this.setStrength(flow.getHypotenuse());
+		return this;
+	},
 
-		equals: function(target) {
-			return this.getDirection() === target.getDirection() &&
-				this.getStrength() === target.getStrength();
-		},
-
-		copy: function() {
-			return new this.constructor(this.getDirection(), this.getStrength());
-		},
-
-		getDirection: function() {
-			return this.direction.getValue();
-		},
-
-		getDirectionRadians: function() {
-			return this.direction.toRadian();
-		},
-
-		setDirection: function(val) {
-			this.direction.setValue(val);
-			return this;
-		},
-
-		modifyDirection: function(addition) {
-			this.direction.add(addition);
-			return this;
-		},
-
-		getStrength: function() {
-			return this.strength;
-		},
-
-		setStrength: function(val) {
-			this.strength = val;
-			this._fixStrength();
-			return this;
-		},
-
-		modifyStrength: function(addition) {
-			this.setStrength(this.getStrength() + addition);
-			return this;
-		},
-
-		getVector: function() {
-			return this.direction.toVector().multiply(this.getStrength());
-		},
-
-		merge: function(force) {
-			var flow = this.getVector(),
-				force = force.getVector();
-			flow.merge(force);
-			this.setStrength(flow.getHypotenuse());
-			this.setDirection(flow.getAngle());
-			return this;
-		},
-
-		toString: function() {
-			return this.base(arguments) + " { direction: " + this.getDirection() + ", strength: " + this.strength + "}";
-		}
-	});
-})();
-
+	toString: function() {
+		return this.base(arguments) + " { direction: " + this.getDirection() + ", strength: " + this.strength + "}";
+	}
+});

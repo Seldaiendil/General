@@ -58,7 +58,7 @@ var oo = (function(ns) {
 
 			for (var i = properties.length; i--; ) {
 				prop = properties[i];
-				upper = prop.charAt(0).toUpperCase() + prop.substr(1);
+				upper = prop.charAt(1).toUpperCase() + prop.substr(1);
 
 				proto['get' + upper] = Class.createGetter(prop);
 				proto['set' + upper] = Class.createSetter(prop);
@@ -97,24 +97,21 @@ var oo = (function(ns) {
 
 		return clazz;
 	}
-
-	Class.cacheG = {};
 	Class.createGetter = function(name) {
-		if (!this.cacheG[name]) {
-			this.cacheG[name] = function() {
+		if (!this.cache[name]) {
+			this.cache[name] = function() {
 				return this[name];
 			};
 		}
-		return this.cacheG[name];
+		return this.cache[name];
 	};
-	Class.cacheS = {};
 	Class.createSetter = function(name) {
-		if (!this.cacheS[name]) {
-			this.cacheS[name] = function(value) {
+		if (!this.cache[name]) {
+			this.cache[name] = function(value) {
 				this[name] = value;
 			};
 		}
-		return this.cacheS[name];
+		return this.cache[name];
 	};
 
 	function BaseClass() { }

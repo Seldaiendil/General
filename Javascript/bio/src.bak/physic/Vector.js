@@ -8,15 +8,11 @@ Class('bio.physic.Vector', {
 	},
 
 
-	//
-	// Base methods
-	//
-
 	equals: function(target) {
 		return this.x === target.x && this.y === target.y;
 	},
 
-	clone: function() {
+	copy: function() {
 		return new this.constructor(this.x, this.y);
 	},
 
@@ -24,17 +20,12 @@ Class('bio.physic.Vector', {
 		return this.x === 0 && this.y === 0;
 	},
 
-
-	//
-	// Operator methods
-	//
-
-	_roundCache: {},
+	roundCache: {},
 	round: function(decimals) {
-		operator = this._roundCache[decimals];
+		operator = this.roundCache[decimals];
 		if (!operator) {
 			var dec = typeof decimals === 'number' ? decimals : 2;
-			operator = this._roundCache[decimals] = Math.pow(10, dec);
+			operator = this.roundCache[decimals] = Math.pow(10, dec);
 		}
 
 		this.x = Math.round(this.x * operator) / operator;
@@ -74,33 +65,10 @@ Class('bio.physic.Vector', {
 		);
 	},
 
-
-	//
-	// Math methods
-	//
-
 	getHypotenuse: function() {
 		if (this.isZero())
 			return 0;
 		return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2), 2)
-	},
-
-	getAngle: function() {
-		var angle = this.getAngleRadians() / Math.PI * 180;
-
-		while (angle < 0)
-			angle += 360;
-		
-		return angle % 360;
-	},
-
-	setAngle: function(value) {
-		value = value % 360;
-
-		if (value > 0)
-			value += 360;
-		
-		this.setAngleRadians(value * Math.PI / 180);
 	},
 
 	getAngleRadians: function() {
@@ -118,10 +86,13 @@ Class('bio.physic.Vector', {
 		return arctan;
 	},
 
-	setAngleRadians: function(value) {
-		// IT RESETS VECTOR HYPOTENUSE TO 1
-		this.x = Math.cos(value);
-		this.y = Math.sin(value);
+	getAngle: function() {
+		var angle = this.getAngleRadians() / Math.PI * 180;
+
+		while (angle < 0)
+			angle += 360;
+		
+		return angle % 360;
 	},
 
 	toString: function() {

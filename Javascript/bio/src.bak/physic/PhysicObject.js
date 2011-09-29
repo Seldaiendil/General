@@ -7,18 +7,18 @@ Class('bio.physic.PhysicObject', {
 		width = width || 1;
 		height = height || 1;
 
+		this.view = null;
 		this.location = new bio.physic.Vector(x, y);
 		this.size = new bio.physic.Vector(width, height);
 		this.movement = new bio.physic.Force(0, 0);
-		this.view = null;
 
 		this.weight = 0.0;
 	},
 
-	properties: [ 'weight' ],
-
 
 	getMovement: function() { return this.movement; },
+	getWeight: function() { return this.weight; },
+	setWeight: function(value) { this.weight = value; },
 
 	getWidth: function() { return this.size.x; },
 	setWidth: function(value) { this.size.x = value; },
@@ -30,18 +30,11 @@ Class('bio.physic.PhysicObject', {
 	getY: function() { return this.location.y; },
 	setY: function(value) { this.location.y = value; },
 
-	getStartX: function() {
-		return this.location.x - this.size.x / 2;
-	},
-	getStartY: function() {
-		return this.location.y - this.size.y / 2;
-	},
-
 	getEndX: function() {
-		return this.location.x + this.size.x / 2;
+		return this.location.x + this.size.x;
 	},
 	getEndY: function() {
-		return this.location.y + this.size.y / 2;
+		return this.location.y + this.size.y;
 	},
 
 	getPosition: function() {
@@ -52,6 +45,10 @@ Class('bio.physic.PhysicObject', {
 		this.location.y = y;
 	},
 
+	getArea: function() {
+		return this.getWidth() * this.getHeight();
+	},
+
 	getSize: function() {
 		return this.size.copy();
 	},
@@ -59,9 +56,6 @@ Class('bio.physic.PhysicObject', {
 		y = typeof y === 'undefined' ? x : y;
 		this.size.x = x;
 		this.size.y = y;
-	},
-	getArea: function() {
-		return this.size.x * this.size.y;
 	},
 
 	getDirection: function() {
@@ -86,17 +80,33 @@ Class('bio.physic.PhysicObject', {
 
 	testCollision: function(target) {
 		return (
-			this.getStartX() < target.getEndX() &&
-			this.getStartY() < target.getEndY() &&
-			this.getEndX() > target.getStartX() &&
-			this.getEndY() > target.getStartY()
+			this.getX() < target.getEndX() &&
+			this.getY() < target.getEndY() &&
+			this.getEndX() > target.getX() &&
+			this.getEndY() > target.getY()
 		);
 	},
 
 	distance: function(target) {
 		if (target instanceof bio.physic.PhysicObject)
-			target = target.location;
+			return this.objectDistance(target);
 		return this.location.diff(target).getHypotenuse();
+	},
+
+	objectDistance: function(target) {
+		var isThisBiggerX = this.location.x > target.location.x;
+		var isThisBiggerY = this.location.y > target.location.y;
+
+		var point1 = new Vector(
+			isThisBiggerX ? this.location.x : this.getEndX(),
+			isThisBiggerY ? this.location.y : this.getEndY()
+		);
+		var point2 = new Vector(
+			isThisBiggerX ? target.getEndX() : target.location.x,
+			isThisBiggerY ? target.getEndY() : target.location.y
+		);
+
+		return point1.diff(point2).getHypotenuse();
 	},
 
 	angle: function(target) {
@@ -109,11 +119,10 @@ Class('bio.physic.PhysicObject', {
 		return this.location.copy().merge(this.movement.getVector());
 	},
 
-	_move: function() {
+	move: function(noevent) {
 		this.location.merge(this.movement.getVector());
-	},
-	move: function() {
-		this._move();
+		if (noevent)
+			return;
 		this.fireEvent('move', this, this.location.x, this.location.y);
 	},
 
@@ -127,14 +136,14 @@ Class('bio.physic.PhysicObject', {
 	},
 
 	accelerate: function(force) {
-		this.movement.modifyStrength(force);
+		this.setVelocity(this.getVelocity() + force);
 	},
 
 	brake: function(force) {
-		var vel = this.movement.getStrength() - force;
+		var vel = this.getVelocity() - force;
 		if (vel < 0)
 			vel = 0;
-		this.movement.setStrength(vel);
+		this.setVelocity(vel);
 	},
 
 	stop: function() {
