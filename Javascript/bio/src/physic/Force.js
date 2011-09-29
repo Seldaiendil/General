@@ -7,15 +7,6 @@ Class('bio.physic.Force', {
 	},
 
 
-	getStrength: function() {
-		return this.strength;
-	},
-	setStrength: function(val) {
-		this.strength = val;
-		this._fixStrength();
-		return this;
-	},
-
 	getDirection: function() {
 		return this.direction.getAngle();
 	},
@@ -33,20 +24,28 @@ Class('bio.physic.Force', {
 		this.direction.setAngleRadians(value);
 	},
 
+
+	getStrength: function() {
+		return this.strength;
+	},
+	setStrength: function(val) {
+		this.strength = val;
+		this._fixStrength();
+		return this;
+	},
 	modifyStrength: function(addition) {
 		this.setStrength(this.getStrength() + addition);
 		return this;
 	},
-
-	getVector: function() {
-		return this.direction.clone().multiply(this.strength);
-	},
-
 	_fixStrength: function() {
 		if (this.strength < 0) {
 			this.direction.multiply(-1);
 			this.strength *= -1;
 		}
+	},
+
+	getVector: function() {
+		return this.direction.clone().multiply(this.strength);
 	},
 
 	equals: function(target) {

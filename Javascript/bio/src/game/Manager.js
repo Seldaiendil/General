@@ -9,13 +9,14 @@ bio.core.ItemHandler.extend('bio.game.Manager', {
 		var cellSize = 10;
 		this.map = new bio.map.Map()
 		this.map.setCellSize(cellSize);
-		this.map.setColumns(width / cellSize);
-		this.map.setRows(height / cellSize);
+		this.map.setColumns(Math.ceil(width / cellSize));
+		this.map.setRows(Math.ceil(height / cellSize));
 		this.map.reset();
 
+		console.log(width, height);
 		this.canvas = document.createElement('canvas');
-		this.canvas.setAttribute('width', width + 'px');
-		this.canvas.setAttribute('height', height + 'px');
+		this.canvas.setAttribute('width', width);
+		this.canvas.setAttribute('height', height);
 		document.body.appendChild(this.canvas);
 
 		for (var i = count; i--; ) {

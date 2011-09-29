@@ -4,10 +4,7 @@
 function getScreenSize() {
 	var size = new bio.physic.Vector(document.body.clientWidth, document.body.clientHeight);
 	getScreenSize = function() {
-		return new bio.physic.Vector(
-			500,
-			200
-		);
+		return size.clone();
 	};
 	return getScreenSize();
 }
@@ -41,7 +38,7 @@ Class('bio.Main', {
 	constructor: function() {
 		var screen = getScreenSize();
 
-		this.ticker = new bio.game.Ticker();
+		this.ticker = new bio.game.Ticker(1000 / 24);
 		this.ticker.addListener('tick', this.tick, this);
 
 		var size = 10;

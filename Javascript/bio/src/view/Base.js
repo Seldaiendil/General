@@ -4,7 +4,6 @@ Class('bio.view.Base', {
 		var movement = element.movement;
 		var size = element.size;
 		var force = movement.getVector();
-		var halfSize = size.clone().multiply(0.5);
 
 		context.save();
 		context.translate(location.x, location.y);
@@ -12,12 +11,19 @@ Class('bio.view.Base', {
 		context.save();
 		context.rotate(movement.getDirectionRadians());
 
-		context.lineWidth = 2;
+		context.lineWidth = 1;
 		context.strokeStyle = 'black';
 		context.fillStyle = 'red';
 
+		context.beginPath();
+		context.arc(0, 0, size.x / 2, 0, Math.PI * 2);
+		context.fill();
+		context.stroke();
+		/*
+		var halfSize = size.clone().multiply(0.5);
 		context.strokeRect(-halfSize.x, -halfSize.y, size.x, size.y);
 		context.fillRect(-halfSize.x, -halfSize.y, size.x, size.y);
+		*/
 
 		context.restore();
 
@@ -29,7 +35,11 @@ Class('bio.view.Base', {
 
 		context.fillStyle = 'blue';
 		context.translate(force.x * multiplier, force.y * multiplier)
-		context.fillRect(-2, -2, 4, 4);
+
+		context.beginPath();
+		context.arc(0, 0, 2, 0, Math.PI * 2);
+		context.fill();
+		//context.fillRect(-2, -2, 4, 4);
 
 		context.restore();
 	}

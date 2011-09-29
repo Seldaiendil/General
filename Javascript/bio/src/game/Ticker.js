@@ -31,8 +31,9 @@ Class('bio.game.Ticker', {
 
 	_tick: function() {
 		this.ticks++;
-		if (this.ticks === 100) {
+		if (this.ticks === 1000) {
 			this.pause();
+			document.title = 'Game Over';
 		}
 		this.fireEvent('tick', this.ticks);
 	}

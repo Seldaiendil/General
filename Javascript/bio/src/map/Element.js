@@ -3,6 +3,10 @@ bio.physic.PhysicObject.extend('bio.map.Element', {
 		this.base(arguments);
 
 		this.view = null;
+
+		this.factor = {
+			'friction': 0.05
+		};
 	},
 
 
@@ -14,8 +18,13 @@ bio.physic.PhysicObject.extend('bio.map.Element', {
 	},
 
 	tick: function(context) {
+		this.friction();
 		this.move();
 		this.view.render(context, this)	
+	},
+
+	friction: function() {
+		this.brake(this.factor['friction']);
 	},
 
 	destroy: function() {
