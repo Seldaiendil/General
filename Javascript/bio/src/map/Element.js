@@ -1,12 +1,10 @@
 bio.physic.PhysicObject.extend('bio.map.Element', {
 	constructor: function Element() {
-		this.base(arguments);
+		Element.base.call(this);
 
-		this.destroyed = false;
 		this.view = null;
-
 		this.factor = {
-			'friction': 0.05
+			'friction': 0.1
 		};
 	},
 
@@ -30,10 +28,10 @@ bio.physic.PhysicObject.extend('bio.map.Element', {
 
 	destroy: function() {
 		this.fireEvent('beforeDestroy', this);
-		this.destroyed = true;
 		this.fireEvent('destroy', this);
 
 		var throwError = this._destroyedError;
+		var returnTrue = this._returnTrue;
 
 		for (var prop in this) {
 			if (typeof this[prop] === 'function')
@@ -41,6 +39,16 @@ bio.physic.PhysicObject.extend('bio.map.Element', {
 			else if (this.hasOwnProperty(prop))
 				this[prop] = null;
 		}
+
+		this.destroyed = returnTrue;
+	},
+
+	destroyed: function() {
+		return false;
+	},
+
+	_returnTrue: function() {
+		return true;
 	},
 
 	_destroyedError: function() {

@@ -1,14 +1,13 @@
 Class('bio.game.Ticker', {
 	constructor: function Ticker(step) {
-		this.base(arguments);
+		Ticker.base.call(this);
 		
 		this.step = step || 100;
 		this.interval = null;
 		this.ticks = 0;
-		this.tick = null;
 	},
 
-	properties: [ 'step', 'tick' ],
+	properties: [ 'step' ],
 
 
 	start: function() {
@@ -21,10 +20,7 @@ Class('bio.game.Ticker', {
 	},
 
 	play: function() {
-		var self = this;
-		this.interval = setInterval(function() {
-			self._tick();
-		}, this.step);
+		this.interval = setInterval(this.tick.bind(this), this.step);
 	},
 
 	pause: function() {
@@ -32,12 +28,9 @@ Class('bio.game.Ticker', {
 		this.interval = null;
 	},
 
-	_tick: function() {
-		this.ticks++;
-		if (this.ticks === 1000) {
-			this.pause();
-			document.title = 'Game Over';
-		}
+	tick: function() {
+		document.title = this.ticks;
 		this.fireEvent('tick', this.ticks);
+		this.ticks++;
 	}
 });

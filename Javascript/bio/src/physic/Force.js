@@ -66,7 +66,7 @@ Class('bio.physic.Force', {
 		return this;
 	},
 
-	toString: function() {
-		return this.base(arguments) + " { direction: " + this.getDirection() + ", strength: " + this.strength + "}";
+	toString: function toString() {
+		return toString.base.call(this) + " { direction: " + this.getDirection() + ", strength: " + this.strength + "}";
 	}
 });

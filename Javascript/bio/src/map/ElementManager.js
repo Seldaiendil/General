@@ -112,16 +112,16 @@ Class('bio.map.ElementManager', {
 
 		// if distance is bigger than half map, it will be shorter by a lateral of the map
 		if (Math.abs(diff.x) > this.halfWidth)
-			location.x += this.halfWidth * this._getSigne(diff.x * -1);
+			location.x += this.halfWidth * this._getSigne(Math.round(diff.x) * -1);
 		
 		if (Math.abs(diff.y) > this.halfHeight)
-			location.y += this.halfHeight * this._getSigne(diff.y * -1);
+			location.y += this.halfHeight * this._getSigne(Math.round(diff.y) * -1);
 		
 		return location;
 	},
 
 	_getSigne: function(value) {
-		return Math.abs(number) / number;
+		return Math.abs(value) / value;
 	},
 
 	getShorterAngle: function(element1, element2) {

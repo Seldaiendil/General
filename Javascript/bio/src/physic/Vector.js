@@ -1,7 +1,5 @@
 Class('bio.physic.Vector', {
 	constructor: function Vector(x, y) {
-		this.base(arguments);
-		
 		var len = arguments.length;
 		this.x = len === 0 ? NaN : x;
 		this.y = len === 1 ? this.x : y;
@@ -124,8 +122,8 @@ Class('bio.physic.Vector', {
 		this.y = Math.sin(value);
 	},
 
-	toString: function() {
-		return this.base(arguments) + " { x: " + this.x + ", y: " + this.y + " }";
+	toString: function toString() {
+		return toString.base.call(this) + " { x: " + this.x + ", y: " + this.y + " }";
 	}
 
 });

@@ -1,24 +1,26 @@
 bio.map.Element.extend('bio.life.LifeForm', {
 	constructor: function LifeForm() {
-		this.base(arguments);
+		LifeForm.base.call(this);
 
 		this.parents = [];
+		this.alive = true;
 	},
 
 
 	isDead: function() {
-		return this.dead;
+		return !this.alive;
 	},
 
 	die: function() {
 		// Until implement dead body dead() is destroy()
+		this.fireEvent('die', this);
 		this.destroy();
 		return;
 
 		if (this.isDead())
 			return;
 		
-		this.dead = true;
+		this.alive = false;
 		this.fireEvent('die', this);
 	},
 

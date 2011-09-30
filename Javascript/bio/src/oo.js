@@ -39,7 +39,7 @@ var oo = (function(ns) {
 		if (config.hasOwnProperty('constructor'))
 			clazz = config.constructor;
 		else
-			clazz = function() { this.base(arguments); };
+			clazz = function() { arguments.callee.base.call(this); };
 		
 		delete config.constructor;
 		clazz.__proto__ = BaseClass;
@@ -135,13 +135,6 @@ var oo = (function(ns) {
 
 		constructor: Base,
 
-		base: function(args /*, var_args... */) {
-			if (!args.callee.base) {
-				throw new Error(this + '.' + args.callee.name + ' Has no base method');
-			}
-			args.callee.base.apply(this, slice.call(arguments, 1));
-		},
-
 		getId: function() {
 			if (typeof this.__id__ !== 'number') {
 				console.warn("Base constructor was not called on " + this);
@@ -171,7 +164,6 @@ var oo = (function(ns) {
 
 		addListener: function(name, handler, scope) {
 			if (!this.__listeners__) {
-				debugger;
 				console.warn("Base constructor was not called on " + this);
 			}
 

@@ -1,9 +1,6 @@
 Class('bio.core.ItemHandler', {
 	constructor: function ItemHandler() {
-		if (arguments.callee.caller !== this.base)
-			throw new Error('Instanciating abstract class');
-
-		this.base(arguments);
+		ItemHandler.base.call(this);
 
 		this.byId = {};
 		this.items = [];
@@ -22,15 +19,11 @@ Class('bio.core.ItemHandler', {
 		return this.items[index];
 	},
 
-	getById: function(id) {
-		return this.items[this.byId[id]];
-	},
-
 	add: function(element) {
 		if (typeof this.byId[element.getId()] === 'number')
 			return;
 		
-		this.byId[element.getId()] = this.items.length;
+		this.byId[element.getId()] = true;
 		this.items[this.items.length] = element;
 		return this;
 	},
@@ -41,10 +34,10 @@ Class('bio.core.ItemHandler', {
 			return;
 		
 		var index = this.byId[id];
-		this.byId[id] = null;
+		this.byId[id] = false;
 		delete this.byId[id];
 		
-		this.items.splice(index, 1);
+		this.items.splice(this.items.indexOf(element), 1);
 		return this;
 	}
 });

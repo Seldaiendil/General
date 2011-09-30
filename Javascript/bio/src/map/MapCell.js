@@ -1,6 +1,6 @@
 bio.core.ItemHandler.extend('bio.map.MapCell', {
 	constructor: function MapCell(x, y) {
-		this.base(arguments);
+		MapCell.base.call(this);
 
 		//this.deads = [];
 		//this.nutrients = 1.0;

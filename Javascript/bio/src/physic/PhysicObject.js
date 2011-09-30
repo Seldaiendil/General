@@ -1,6 +1,6 @@
 Class('bio.physic.PhysicObject', {
 	constructor: function PhysicObject(x, y, width, height) {
-		this.base(arguments);
+		PhysicObject.base.call(this);
 		
 		x = x || 0;
 		y = y || 0;

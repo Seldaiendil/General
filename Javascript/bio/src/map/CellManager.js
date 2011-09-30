@@ -102,23 +102,19 @@ Class('bio.map.CellManager', {
 		var cells = this.getCellsAtZone(startX, startY, endX, endY);
 		var result = new bio.map.Range();
 
-		if (pepe)
-		debugger;
 		for (var i = cells.length; i--; )
 			result.merge(cells[i].getElements());
 		
 		return result;
 	},
 
-	getRangeFromElement: function(element) {
-		pepe = true;
+	getRangeFromElement: function(element, radius) {
 		return this.getRangeFromZone(
-			element.getStartX(),
-			element.getStartY(),
-			element.getEndX(),
-			element.getEndY()
+			element.getStartX() - radius,
+			element.getStartY() - radius,
+			element.getEndX() + radius,
+			element.getEndY() + radius
 		);
 	}
 });
 
-var pepe = false;
