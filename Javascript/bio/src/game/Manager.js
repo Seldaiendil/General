@@ -1,8 +1,7 @@
 bio.core.ItemHandler.extend('bio.game.Manager', {
-	constructor: function(count, width, height, config) {
+	constructor: function Manager(width, height) {
 		this.base(arguments);
 
-		this.configure = config;
 		this.width = width;
 		this.height = height;
 
@@ -13,17 +12,10 @@ bio.core.ItemHandler.extend('bio.game.Manager', {
 		this.map.setRows(Math.ceil(height / cellSize));
 		this.map.reset();
 
-		console.log(width, height);
 		this.canvas = document.createElement('canvas');
 		this.canvas.setAttribute('width', width);
 		this.canvas.setAttribute('height', height);
 		document.body.appendChild(this.canvas);
-
-		for (var i = count; i--; ) {
-			var element = this.createElement();
-			this.add(element);
-			this.map.addElement(element);
-		}
 	},
 
 
@@ -32,16 +24,19 @@ bio.core.ItemHandler.extend('bio.game.Manager', {
 		var items = this.items;
 
 		context.clearRect(0, 0, this.width, this.height);
-		//this.map.tick();
+		this.map.tick();
 
 		for (var i = items.length; i--; )
-			items[i].tick(context);
+			items[i].tick(this.map, context);
 	},
 
-	createElement: function() {
-		var element = new bio.life.LifeForm();
+	addElements: function(count, factory, scope) {
+		for (var i = count; i--; )
+			this.add(factory.call(scope || null, i));
+	},
 
-		this.configure(element);
+	add: function(element) {
+		this.base(arguments, element);
 
 		element.addListener('move', this._onElementMove, this);
 		element.addListener('destroy', this._onElementDestroy, this);

@@ -102,6 +102,8 @@ Class('bio.map.CellManager', {
 		var cells = this.getCellsAtZone(startX, startY, endX, endY);
 		var result = new bio.map.Range();
 
+		if (pepe)
+		debugger;
 		for (var i = cells.length; i--; )
 			result.merge(cells[i].getElements());
 		
@@ -109,7 +111,8 @@ Class('bio.map.CellManager', {
 	},
 
 	getRangeFromElement: function(element) {
-		return this.getCellsAtZone(
+		pepe = true;
+		return this.getRangeFromZone(
 			element.getStartX(),
 			element.getStartY(),
 			element.getEndX(),
@@ -117,3 +120,5 @@ Class('bio.map.CellManager', {
 		);
 	}
 });
+
+var pepe = false;

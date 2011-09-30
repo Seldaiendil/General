@@ -2,6 +2,7 @@ bio.physic.PhysicObject.extend('bio.map.Element', {
 	constructor: function Element() {
 		this.base(arguments);
 
+		this.destroyed = false;
 		this.view = null;
 
 		this.factor = {
@@ -29,20 +30,21 @@ bio.physic.PhysicObject.extend('bio.map.Element', {
 
 	destroy: function() {
 		this.fireEvent('beforeDestroy', this);
+		this.destroyed = true;
+		this.fireEvent('destroy', this);
 
 		var throwError = this._destroyedError;
 
 		for (var prop in this) {
-			if (this.hasOwnProperty(prop))
-				this[prop] = null;
 			if (typeof this[prop] === 'function')
 				this[prop] = throwError;
+			else if (this.hasOwnProperty(prop))
+				this[prop] = null;
 		}
-
-		this.fireEvent('destroy', this);
 	},
 
 	_destroyedError: function() {
+		debugger;
 		throw new Error('Called a method of a destroyed element');
 	}
 });

@@ -159,9 +159,14 @@ var oo = (function(ns) {
 			if (!listeners)
 				return;
 			
+			var prevented = false;
 			var args = slice.call(arguments, 1);
+
 			for (var i = 0, len = listeners.length; i < len; i++)
-				listeners[i].handler.apply(listeners[i].scope, args)
+				if (listeners[i].handler.apply(listeners[i].scope, args) === false)
+					prevented = true;
+			
+			return prevented;
 		},
 
 		addListener: function(name, handler, scope) {

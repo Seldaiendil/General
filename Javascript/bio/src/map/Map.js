@@ -1,5 +1,5 @@
 Class('bio.map.Map', {
-	constructor: function () {
+	constructor: function Map() {
 		this.cellSize = 10;
 		this.colums = 100;
 		this.rows = 100;
@@ -12,7 +12,8 @@ Class('bio.map.Map', {
 
 
 	tick: function() {
-		this.cells.tick();
+		this.elements.tick();
+		//this.cells.tick();
 	},
 
 	reset: function() {
@@ -58,8 +59,12 @@ Class('bio.map.Map', {
 	//
 	// Cell Manager methods
 	//
-
+/*
 	getCellsAtElement: function(element) {
 		return this.cells.getCellsAtElement(element);
+	},
+*/
+	getRangeFromElement: function(element, radius) {
+		return this.cells.getRangeFromElement(element, radius);
 	}
 });

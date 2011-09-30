@@ -1,5 +1,5 @@
 Class('bio.map.ElementManager', {
-	constructor: function() {
+	constructor: function ElementManager() {
 		this.locations = {};
 
 		this.width;
@@ -8,6 +8,10 @@ Class('bio.map.ElementManager', {
 		this.halfHeight;
 	},
 
+
+	tick: function() {
+		this.distanceCache = {};
+	},
 
 	setSize: function(width, height) {
 		this.width = width;
@@ -33,8 +37,9 @@ Class('bio.map.ElementManager', {
 		var id = element.getId();
 		var lastCells = this.locations[id];
 		var currentCells = cellManager.getCellsAtElement(element);
+		this.locations[id] = currentCells;
+
 		var i, j, search, found;
-		
 		var remove = [];
 		for (i = lastCells.length; i--; ) {
 			search = lastCells[i];
@@ -85,6 +90,7 @@ Class('bio.map.ElementManager', {
 			element.setY(y % height);
 	},
 
+	distanceCache: {},
 	getShorterDistance: function(element1, element2) {
 		var cache = this.distanceCache[element1.getId() + '-' + element2.getId()];
 		if (cache)
@@ -101,8 +107,8 @@ Class('bio.map.ElementManager', {
 	},
 
 	_calcRoundMapLocation: function(element1, element2) {
-		var location = element.location.copy();
-		var diff = location.diff(target.location);
+		var location = element1.location.clone();
+		var diff = location.diff(element2.location);
 
 		// if distance is bigger than half map, it will be shorter by a lateral of the map
 		if (Math.abs(diff.x) > this.halfWidth)

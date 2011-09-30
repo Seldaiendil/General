@@ -1,5 +1,5 @@
 Class('bio.game.Ticker', {
-	constructor: function(step) {
+	constructor: function Ticker(step) {
 		this.base(arguments);
 		
 		this.step = step || 100;
@@ -21,7 +21,10 @@ Class('bio.game.Ticker', {
 	},
 
 	play: function() {
-		this.interval = setInterval(this._tick.bind(this), this.step);
+		var self = this;
+		this.interval = setInterval(function() {
+			self._tick();
+		}, this.step);
 	},
 
 	pause: function() {

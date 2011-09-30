@@ -30,7 +30,7 @@ Class('bio.core.ItemHandler', {
 		if (typeof this.byId[element.getId()] === 'number')
 			return;
 		
-		this.byId[element.getId()] = true;
+		this.byId[element.getId()] = this.items.length;
 		this.items[this.items.length] = element;
 		return this;
 	},
