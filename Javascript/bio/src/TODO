@@ -1,0 +1,8 @@
+Boored Animals move around
+
+LifeForms has a limited energy used on every tick
+
+Dead LifeForms are not removed from map until they body has dissappeared
+
+Nutrients from Cells to Plants
+Nutrients from dead LifeForms to Cells
