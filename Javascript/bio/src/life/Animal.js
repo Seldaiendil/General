@@ -22,8 +22,8 @@ bio.life.LifeForm.extend('bio.life.Animal', {
 	tick: function tick(map, context) {
 		this.interact(map);
 
-		if (this.boored)
-			this.shove(this.getDirection() + (Math.random() * 6 - 3), Math.random() * 3);
+		//if (this.boored)
+		//	this.shove(this.getDirection() + (Math.random() * 6 - 3), Math.random() * 3);
 
 		tick.base.call(this, context);
 	},
@@ -104,6 +104,10 @@ bio.life.LifeForm.extend('bio.life.Animal', {
 	},
 
 	hunt: function(target, distance, closerFood) {
+		// Not canivalism if possible
+		if (!(closerFood.target instanceof this.constructor) && target instanceof this.constructor)
+			return;
+
 		if (!this.fight(target))
 			return;
 		

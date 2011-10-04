@@ -95,7 +95,7 @@ Class('bio.physic.Vector', {
 	setAngle: function(value) {
 		value = value % 360;
 
-		if (value > 0)
+		if (value < 0)
 			value += 360;
 		
 		this.setAngleRadians(value * Math.PI / 180);
@@ -108,7 +108,7 @@ Class('bio.physic.Vector', {
 		var arctan = Math.atan(this.y / this.x);
 
 		if (arctan < 0)
-			arctan = Math.PI + arctan;
+			arctan += Math.PI;
 
 		if (this.y < 0 || (this.y === 0 && this.x < 0))
 			arctan += Math.PI;

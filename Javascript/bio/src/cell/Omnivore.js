@@ -10,15 +10,5 @@ bio.cell.Cell.extend('bio.cell.Omnivore', {
 			g: 0,
 			b: 255
 		};
-	},
-
-
-	hunt: function hunt(target, distance, closerFood) {
-		// Not to eat carnivores if there are vegetarians around
-		if (!(closerFood.target instanceof bio.cell.Omnivore) &&
-			target instanceof bio.cell.Omnivore)
-			return;
-
-		hunt.base.call(this, target, distance, closerFood);
 	}
 });
