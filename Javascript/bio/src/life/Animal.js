@@ -59,11 +59,11 @@ bio.life.LifeForm.extend('bio.life.Animal', {
 
 		if (food && !food.destroyed()) {
 			this.boored = false;
-			this.brake(this.factor['interaction brake']);
-			this.shove(
-				this.angle(food),
-				(this.factor['velocity hunting'] / closer.food.distance) * this.factor['velocity']
-			);
+			var velocity = (this.factor['velocity hunting'] - closer.food.distance) * this.factor['velocity'];
+			if (velocity > 0) {
+				//this.brake(this.factor['interaction brake']);
+				this.shove(this.angle(food), velocity);
+			}
 		} else if (predator && !predator.destroyed()) {
 			this.boored = false;
 			this.shove(
