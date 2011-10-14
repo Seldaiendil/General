@@ -23,7 +23,7 @@ function simpleGet(server, url, callback) {
 	http.get({ host: server, port: 80, path: url}, function(response) {
 		parseHeaders(response);
 		function parseData(buffer) {
-			callback(buffer.toString('utf8', 0, buffer.length), stop);
+			callback(null, buffer.toString('utf8', 0, buffer.length), stop);
 		}
 
 		function stop() {
@@ -60,7 +60,7 @@ function get(server, url, post, callback) {
 		parseHeaders(response);
 
 		function parseData(buffer) {
-			callback(buffer.toString('utf8', 0, buffer.length), stop);
+			callback(null, buffer.toString('utf8', 0, buffer.length), stop);
 		}
 
 		function stop() {
@@ -70,7 +70,7 @@ function get(server, url, post, callback) {
 		response.on('data', parseData);
 	});
 
-	console.info("Calling: " + server + url + "\n\tPOST: " + parsePost(post));
+	console.info("Calling: " + server + url + "\n\tPOST: " + parsePost(post));// + '\n\tCOOKIES: ' + cookies.toString());
 
 	request.write(data);
 	request.end();

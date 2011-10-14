@@ -1,4 +1,5 @@
 var fs = require('fs');
+var async = require('async');
 var client = require('../client.js');
 
 var sessionsFile = 'sessions.json';
@@ -18,14 +19,14 @@ function saveSession(name) {
 function loadSession(name, callback) {
 	fs.readFile(sessionsFile, 'utf8', function(err, data) {
 		if (!data) {
-			callback(false);
+			callback(null, false);
 			return;
 		}
 
 		var session = JSON.parse(data)[name];
 		client.setCookie('PHPSESSID', session.php);
 		client.setCookie('ikariam', session.ikariam);
-		callback(true);
+		callback(null, true);
 	});
 }
 function hasSession() {
@@ -36,7 +37,7 @@ function getWorlds(callback) {
 	var select = null;
 	var worlds = null;
 
-	client.simpleGet('es.ikariam.com', '/', function(data, stop) {
+	client.simpleGet('es.ikariam.com', '/', function(err, data, stop) {
 		if (!select) {
 			var start = data.indexOf(' id="oiServer"');
 			if (start !== -1) {
@@ -50,13 +51,13 @@ function getWorlds(callback) {
 				
 				stop();
 				worlds = parseWorlds(select);
-				callback(worlds);
+				callback(null, worlds);
 			}
 		}
 	});
 
 	getWorlds = function(callback) {
-		callback(worlds)
+		callback(null, worlds)
 	};
 }
 
@@ -76,7 +77,7 @@ function parseWorlds(select) {
 }
 
 function login(world, user, password, callback) {
-	getWorlds(function(worlds) {
+	getWorlds(function(err, worlds) {
 		var server;
 
 		for (var i in worlds) {
@@ -90,19 +91,71 @@ function login(world, user, password, callback) {
 			name: user,
 			password: password,
 			kid: ''
-		}, function(data, stop) {
+		}, function(err, data, stop) {
 			var session = client.getCookie('PHPSESSID');
 
 			if (session) {
 				stop();
 				saveSession(user);
-				callback();
+				callback(null);
 			}
 		});
 	});
 }
 
 function isLogged(world, user, callback) {
+	async.parallel([
+		function(sync) {
+			if (hasSession()) {
+				sync(null);
+			} else {
+				loadSession(user, function(err, success) {
+					if (!success) {
+						callback(null, false);
+						return;
+					}
+
+					sync(null);
+					update();
+				});
+			}
+		},
+		getWorlds
+	],
+	function(err, results) {
+		var worlds = results[1];
+		var server;
+		for (var i in worlds) {
+			if (worlds[i] === world) {
+				server = i;
+				break;
+			}
+		}
+		if (!server)
+			callback(new Error('Server not found'));
+
+		var html = "";
+		client.get(server, '/index.php', {}, function(err, data, stop) {
+			html += data;
+
+			// Logged
+			if (html.indexOf('<body id="worldmap_iso"') !== -1)
+				callback(null, true);
+			
+			// Wrong session
+			else if (html.indexOf('<body id="errorLoggedOut"') !== -1)
+				callback(null, false);
+			
+			// Session caducated
+			else if (html.indexOf('<body>') !== -1)
+				callback(null, false);
+			
+			// If no one, we must not stop
+			else return;
+			stop();
+		});
+	});
+
 	var server = null;
 	var cookie = false;
 
@@ -110,34 +163,14 @@ function isLogged(world, user, callback) {
 		if (server === null || !cookie)
 			return;
 		
-		var html = "";
-		client.get(server, '/index.php', {}, function(data, stop) {
-			html += data;
-
-			// Logged
-			if (html.indexOf('<body id="worldmap_iso"') !== -1)
-				callback(true);
-			
-			// Wrong session
-			else if (html.indexOf('<body id="errorLoggedOut"') !== -1)
-				callback(false);
-			
-			// Session caducated
-			else if (html.indexOf('<body>') !== -1)
-				callback(false);
-			
-			// If no one, we must not stop
-			else return;
-			stop();
-		});
 	}
 
 	if (hasSession()) {
 		cookie = true;
 	} else {
-		loadSession(user, function(success) {
+		loadSession(user, function(err, success) {
 			if (!success) {
-				callback(false);
+				callback(null, false);
 				return;
 			}
 
@@ -146,14 +179,7 @@ function isLogged(world, user, callback) {
 		});
 	}
 
-	getWorlds(function(worlds) {
-		for (var i in worlds) {
-			if (worlds[i] === world) {
-				server = i;
-				update();
-				return
-			}
-		}
+	getWorlds(function(err, worlds) {
 	});
 }
 
