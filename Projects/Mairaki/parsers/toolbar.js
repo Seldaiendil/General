@@ -1,9 +1,4 @@
-var client = require('../client.js');
-
-
-
-function parseToolbar() {
-	
+function parseToolbar(html) {
 }
 
 

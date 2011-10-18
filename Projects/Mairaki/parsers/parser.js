@@ -1,6 +1,9 @@
-var jsdom = require('jsdom');
+var toolbar = require('./toolbar.js');
 
-exports.parse(html, callback) {
+function Parser() {
+	this.cities = [];
+}
+
+function City(name) {
 	
 }
-jsdom.env()
