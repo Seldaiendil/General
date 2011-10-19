@@ -18,67 +18,79 @@ Client.prototype = EventEmitter.prototype.extend({
 		return this.cookies.set(key, value);
 	},
 
-	post: function(url, post, callback) {
-		var data = 'uni_url=' + this.server + '&' + createPost(post);
+	get: function(url, post, callback) {
+		var cookies = this.cookies.toString()
+		var method = post ? 'POST' : 'GET';
 		var resp = new Response();
-
-		var request = http.request({
+		var config = {
 			host: this.server,
 			port: 80,
 			path: url,
-			method: 'POST',
+			method: method,
 			headers: {
-				//'Host': server,
-				//'Connection': "keep-alive",
-				//'ContentLength': data.length,
-				//'Cache-Control': "max-age=0",
-				//'Origin': "http://es.ikariam.com",
-				//'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.835.186 Safari/535.1",
+				'Host': this.server,
+				'Connection': "keep-alive",
+				'Cache-Control': "max-age=0",
+				'Origin': "http://es.ikariam.com",
+				'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.835.186 Safari/535.1",
 				'Content-Type': "application/x-www-form-urlencoded",
-				//'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-				//'Referer': "http://es.ikariam.com/index.php",
-				//'Accept-Lanuage': "es,ru;q=0.8",
-				//'Accept-Charset': "utf-8;q=0.7,*;q=0.3",
-				'Cookie': this.cookies.toString()
+				'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+				'Referer': "http://es.ikariam.com/index.php",
+				'Accept-Lanuage': "es,ru;q=0.8",
+				'Accept-Charset': "utf-8;q=0.7,*;q=0.3",
+				'Cookie': cookies
 			}
-		}, handleResponse(this, resp, callback));
+		};
 
-		console.info("Calling: POST http://" + this.server + url + "\n\tPOST: " + createPost(post) + '\n\tCOOKIES: ' + this.cookies.toString());
+		console.info("Calling: " + method + " http://" + this.server + url + '\n\tCOOKIES: ' + cookies);
 
-		request.write(data);
-		request.end();
+		if (post) {
+
+			data = 'uni_url=' + this.server + '&' + createPost(post);
+			config.headers['ContentLength'] = data.length
+			console.info('\tPOST: ' + data);
+
+			var request = http.request(config, handleResponse(this, resp, callback));
+			request.write(data);
+			request.end();
+
+		} else {
+			http.get(config, handleResponse(this, resp, callback));
+		}
 		return resp;
 	},
 
-	postParse: function(url, post, callback) {
-		this.post(url, post, function(html) {
-			jsdom.env({
-				html: html,
-				scripts: [ 'lib/jquery-1.5.min.js' ]
-			}, function (err, window) {
-				callback(err, window.jQuery, window, html);
-			});
-		});
-	},
-
-	get: function(url, callback) {
+	getNoCookies: function(url, callback) {
 		var resp = new Response();
 		http.get({ host: this.server, port: 80, path: url}, handleResponse(this, resp, callback));
-		console.info("Calling: GET http://" + this.server + url + '\n\tCOOKIES: ' + this.cookies.toString());
+		console.info("Calling: GET http://" + this.server + url);
 		return resp;
 	},
 
-	getParse: function(url, callback) {
-		this.get(url, function(html) {
-			jsdom.env({
-				html: html,
-				scripts: [ 'lib/jquery-1.5.min.js' ]
-			}, function (err, window) {
-				callback(err, window.jQuery, window, html);
-			});
-		});
+	query: function(url, post, callback) {
+		if (arguments.length === 2) {
+			callback = post;
+			post = null;
+		}
+		this.get(url, post, handleJsdom(callback));
+	},
+
+	getNoCookiesQuery: function(url, callback) {
+		this.getNoCookies(url, handleJsdom(callback));
 	}
 });
+
+
+function handleJsdom(callback) {
+	return function(html) {
+		jsdom.env({
+			html: html,
+			scripts: [ 'lib/jquery-1.6.4.min.js' ]
+		}, function (err, window) {
+			callback(err, window.jQuery, window, html);
+		});
+	};
+}
 
 function handleResponse(self, resp, callback) {
 	return function(response) {
@@ -88,18 +100,20 @@ function handleResponse(self, resp, callback) {
 		function parseData(buffer) {
 			var block = buffer.toString('utf8', 0, buffer.length);
 			html += block;
+			console.log("LEEEEEEEEEEEGNTH:::: "+ html.length);
 			resp.emit('data', block, stop);
 		}
 		function stop() {
 			response.removeListener('data', parseData);
 		}
-
 		response.on('data', parseData);
 		response.on('end', function() {
-			resp.emit('end', html);
+			var end = html.indexOf('</html>');
+			if (end !== -1)
+				html = html.substr(0, end + 7)
 
-			if (callback)
-				callback(html);
+			resp.emit('end', html);
+			callback(html);
 		});
 	}
 }
@@ -137,7 +151,6 @@ Cookies.prototype = {
 				cookie = newCookies[i];
 			else
 				cookie = newCookies[i].substr(0, end);
-			//console.info('Found New Cookie: --[' + cookie + ']--');
 			cookie = cookie.split('=');
 			this.set(unescape(cookie[0]), unescape(cookie[1]));
 		}
