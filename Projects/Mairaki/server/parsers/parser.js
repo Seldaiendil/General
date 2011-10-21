@@ -1,27 +1,23 @@
 var async = require('async');
 
 exports.Parser = Parser;
-function Parser(session, callback) {
-	var self = this;
-
-	session.client.query('/index.php', {}, function(err, $, window) {
-		self.parseGlobals(session, $, function() {
-			self.parseAllCities(session, callback);
-		});
-	});
-
+function Parser(session, $) {
+	this.session = session;
+	this.parseGlobals($);
+	//this.parseAllCities(callback);
 }
 Parser.prototype = {
-	parseGlobals: function(session, $, callback) {
-		session.state.gold = num($('#value_gold').html());
-		session.state.ships = getTotalFree($('#accountTransporter').html());
+	parseGlobals: function($) {
+		var state = this.session.state;
+		state.gold = num($('#value_gold').html());
+		state.ships = getTotalFree($('#accountTransporter').html());
 
 		var fields = {};
 		$('#changeCityForm input').each(function(index, element) {
 			fields[element.name] = element.value;
 		});
 
-		var cities = session.state.cities;
+		var cities = state.cities;
 		$('#citySelect option p').each(function(index, element) {
 			var id = element.parentNode.value;
 			for (var i = cities.length; i--; )
@@ -29,35 +25,29 @@ Parser.prototype = {
 					return;
 
 			var name = $(element).html().split('&nbsp;')[1].trim();
-			session.state.addCity(id, name);
+			state.addCity(id, name);
 		});
-		session.state.citiesById.fields = fields;
-
-		callback(session);
+		state.citiesById.fields = fields;
 	},
 
-	parseAllCities: function(session, callback) {
+	parseAllCities: function(callback) {
+		var self = this;
 		var citiesParsers = [];
-		var cities = session.state.cities;
+		var cities = this.session.state.cities;
 
 		for (var i = cities.length; i--; ) {
-			citiesParsers.push(generateCityParser(session, cities[i]));
+			citiesParsers.push(generateCityParser(this.session, cities[i]));
 		}
 
-		console.log("Length: " + cities.length)
-
-		console.log(citiesParsers);
 		async.parallel(citiesParsers, function(err, results) {
-			callback(session);
+			callback(err, self.session);
 		});
-
 	}
 };
 
 function generateCityParser(session, city) {
 	return function(sync) {
 		session.client.query('/index.php?view=city&id=' + city.id + '&trololo=' + city.name, function(err, $, window) {
-			console.log("Parsing City: " + city.name);
 			city.level = num($('#mainview').attr('id').replace('phase', ''));
 			city.resources = {
 				habitants: getTotalFree($('#value_inhabitants').html()),
@@ -69,12 +59,11 @@ function generateCityParser(session, city) {
 			};
 
 			$('#locations a').each(function(index, element) {
-				var match = element.href.match(/\?view=(\w+)&amp;id=\d+&amp;position=(\d+)/);
-				if (!match || match[1] === 'buildingGround') {
+				var match = element.href.match(/\?view=(\w+)&id=\d+&position=(\d+)/);
+				if (!match || match[1] === 'buildingGround')
 					return;
-				}
 
-				city.newBuilding(match[2], match[1], element.title.split(/ /).pop());
+				city.addBuilding(match[2], match[1], element.title.split(/ /).pop());
 			});
 
 			sync(null, city);

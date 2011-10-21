@@ -21,6 +21,24 @@ State.prototype = {
 		var city = new City(id, name);
 		this.cities.push(city);
 		this.citiesById[id] = city;
+	},
+
+	serialize: function(beauty) {
+		return JSON.stringify(this.serializable(), null, beauty ? '\t' : null);
+	},
+
+	serializable: function() {
+		var result = {};
+
+		for (var i in this)
+			if (i !== 'citiesById' && i !== 'cities')
+				result[i] = this[i];
+
+		result.cities = [];
+		for (i = this.cities.length; i--; )
+			result.cities[i] = this.cities[i].serializable();
+		
+		return result;
 	}
 }
 
@@ -39,6 +57,24 @@ City.prototype = {
 		var build = new Building(name, level, position);
 		this.buildings[position] = build;
 		this.buildingsByName[name] = build;
+	},
+
+	serializable: function() {
+		var result = {};
+
+		for (var i in this)
+			if (i !== 'buildingsByName' && i !== 'buildings')
+				result[i] = this[i];
+		
+		result.buildings = [];
+		for (i = this.buildings.length; i--; ) {
+			if (this.buildings[i])
+				result.buildings[i] = this.buildings[i].serializable();
+			else
+				result.buildings[i] = null;
+		}
+
+		return result;
 	}
 }
 
@@ -47,3 +83,8 @@ function Building(name, level, position) {
 	this.level = level;
 	this.position = position;
 }
+Building.prototype = {
+	serializable: function() {
+		return this;
+	}
+};

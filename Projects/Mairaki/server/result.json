@@ -1,0 +1,343 @@
+{
+	"gold": 297053,
+	"ships": {
+		"free": 34,
+		"total": 34
+	},
+	"news": {
+		"trade": false,
+		"military": false,
+		"research": false,
+		"diplomacy": false
+	},
+	"cities": [
+		{
+			"id": "89811",
+			"name": "Sels Lab",
+			"level": null,
+			"resources": {
+				"habitants": {
+					"free": 271,
+					"total": 555
+				},
+				"wood": 9081,
+				"wine": 14863,
+				"marble": 832,
+				"crystal": 2000,
+				"sulfur": 956
+			},
+			"buildings": [
+				{
+					"name": "townHall",
+					"level": "9",
+					"position": "0"
+				},
+				{
+					"name": "shipyard",
+					"level": "5",
+					"position": "1"
+				},
+				{
+					"name": "port",
+					"level": "10",
+					"position": "2"
+				},
+				{
+					"name": "palace",
+					"level": "3",
+					"position": "3"
+				},
+				{
+					"name": "tavern",
+					"level": "8",
+					"position": "4"
+				},
+				{
+					"name": "academy",
+					"level": "10",
+					"position": "5"
+				},
+				{
+					"name": "branchOffice",
+					"level": "7",
+					"position": "6"
+				},
+				{
+					"name": "forester",
+					"level": "4",
+					"position": "7"
+				},
+				{
+					"name": "embassy",
+					"level": "4",
+					"position": "8"
+				},
+				{
+					"name": "barracks",
+					"level": "9",
+					"position": "9"
+				},
+				null,
+				{
+					"name": "safehouse",
+					"level": "10",
+					"position": "11"
+				},
+				{
+					"name": "warehouse",
+					"level": "10",
+					"position": "12"
+				},
+				null,
+				{
+					"name": "wall",
+					"level": "9",
+					"position": "14"
+				}
+			]
+		},
+		{
+			"id": "91904",
+			"name": "Liliareth",
+			"level": null,
+			"resources": {
+				"habitants": {
+					"free": 181,
+					"total": 680
+				},
+				"wood": 22264,
+				"wine": 3779,
+				"marble": 2840,
+				"crystal": 9234,
+				"sulfur": 2768
+			},
+			"buildings": [
+				{
+					"name": "townHall",
+					"level": "9",
+					"position": "0"
+				},
+				{
+					"name": "shipyard",
+					"level": "5",
+					"position": "1"
+				},
+				{
+					"name": "port",
+					"level": "9",
+					"position": "2"
+				},
+				{
+					"name": "palaceColony",
+					"level": "3",
+					"position": "3"
+				},
+				{
+					"name": "tavern",
+					"level": "6",
+					"position": "4"
+				},
+				{
+					"name": "academy",
+					"level": "8",
+					"position": "5"
+				},
+				{
+					"name": "stonemason",
+					"level": "5",
+					"position": "6"
+				},
+				{
+					"name": "embassy",
+					"level": "4",
+					"position": "7"
+				},
+				{
+					"name": "workshop",
+					"level": "5",
+					"position": "8"
+				},
+				{
+					"name": "barracks",
+					"level": "8",
+					"position": "9"
+				},
+				null,
+				{
+					"name": "safehouse",
+					"level": "9",
+					"position": "11"
+				},
+				{
+					"name": "warehouse",
+					"level": "9",
+					"position": "12"
+				},
+				null,
+				{
+					"name": "wall",
+					"level": "9",
+					"position": "14"
+				}
+			]
+		},
+		{
+			"id": "94939",
+			"name": "Lenir",
+			"level": null,
+			"resources": {
+				"habitants": {
+					"free": 181,
+					"total": 680
+				},
+				"wood": 22264,
+				"wine": 3779,
+				"marble": 2840,
+				"crystal": 9234,
+				"sulfur": 2768
+			},
+			"buildings": [
+				{
+					"name": "townHall",
+					"level": "9",
+					"position": "0"
+				},
+				{
+					"name": "shipyard",
+					"level": "4",
+					"position": "1"
+				},
+				{
+					"name": "port",
+					"level": "9",
+					"position": "2"
+				},
+				{
+					"name": "palaceColony",
+					"level": "3",
+					"position": "3"
+				},
+				{
+					"name": "tavern",
+					"level": "6",
+					"position": "4"
+				},
+				{
+					"name": "academy",
+					"level": "9",
+					"position": "5"
+				},
+				null,
+				{
+					"name": "embassy",
+					"level": "2",
+					"position": "7"
+				},
+				null,
+				{
+					"name": "barracks",
+					"level": "9",
+					"position": "9"
+				},
+				null,
+				{
+					"name": "safehouse",
+					"level": "9",
+					"position": "11"
+				},
+				{
+					"name": "warehouse",
+					"level": "9",
+					"position": "12"
+				},
+				null,
+				{
+					"name": "wall",
+					"level": "8",
+					"position": "14"
+				}
+			]
+		},
+		{
+			"id": "101848",
+			"name": "Artilugia",
+			"level": null,
+			"resources": {
+				"habitants": {
+					"free": 276,
+					"total": 555
+				},
+				"wood": 5324,
+				"wine": 3703,
+				"marble": 5408,
+				"crystal": 7346,
+				"sulfur": 3377
+			},
+			"buildings": [
+				{
+					"name": "townHall",
+					"level": "6",
+					"position": "0"
+				},
+				{
+					"name": "shipyard",
+					"level": "1",
+					"position": "1"
+				},
+				{
+					"name": "port",
+					"level": "6",
+					"position": "2"
+				},
+				{
+					"name": "palaceColony",
+					"level": "2",
+					"position": "3"
+				},
+				{
+					"name": "tavern",
+					"level": "3",
+					"position": "4"
+				},
+				{
+					"name": "academy",
+					"level": "2",
+					"position": "5"
+				},
+				{
+					"name": "alchemist",
+					"level": "3",
+					"position": "6"
+				},
+				{
+					"name": "forester",
+					"level": "1",
+					"position": "7"
+				},
+				null,
+				{
+					"name": "barracks",
+					"level": "7",
+					"position": "9"
+				},
+				null,
+				{
+					"name": "safehouse",
+					"level": "6",
+					"position": "11"
+				},
+				{
+					"name": "warehouse",
+					"level": "6",
+					"position": "12"
+				},
+				null,
+				{
+					"name": "wall",
+					"level": "6",
+					"position": "14"
+				}
+			]
+		}
+	]
+}

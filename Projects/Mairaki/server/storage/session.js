@@ -60,21 +60,25 @@ Session.prototype = {
 		],
 		function(err, results) {
 			self.client.server = results[1];
-			self.client.query('/index.php', function(err, $, window) {
-				switch (window.document.body.id) {
-					case 'worldmap_iso': // Logged
-						callback(null, true);
-						break;
-					case 'errorLoggedOut': // Wrong session
-						callback(null, false);
-						break;
-					case '': // Session caducated
-						callback(null, false);
-						break;
-					default:
-						throw new Error('Unexpected body ID: --[' + $(window.document.body).id + ']--');
-				}
-			});
+			try {
+				self.client.query('/index.php', function(err, $, window) {
+					switch (window.document.body.id) {
+						case 'worldmap_iso': // Logged
+							callback(null, true, $);
+							break;
+						case 'errorLoggedOut': // Wrong session
+							callback(null, false);
+							break;
+						case '': // Session caducated
+							callback(null, false);
+							break;
+						default:
+							throw new Error('Unexpected body ID: --[' + $(window.document.body).id + ']--');
+					}
+				});
+			} catch (err) {
+				callback(err);
+			}
 		});
 	},
 

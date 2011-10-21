@@ -6,6 +6,8 @@ exports.Client = Client;
 function Client() {
 	this.cookies = new Cookies();
 	this.server = '';
+	this.log = true;
+	this.calls = 0;
 }
 Client.prototype = EventEmitter.prototype.extend({
 	constructor: Client,
@@ -19,6 +21,13 @@ Client.prototype = EventEmitter.prototype.extend({
 	},
 
 	get: function(url, post, callback) {
+		if (typeof post === 'function') {
+			callback = post;
+			post = null;
+		} else if (!callback) {
+			callback = function() { };
+		}
+		this.calls++;
 		var cookies = this.cookies.toString()
 		var method = post ? 'POST' : 'GET';
 		var resp = new Response();
@@ -28,27 +37,29 @@ Client.prototype = EventEmitter.prototype.extend({
 			path: url,
 			method: method,
 			headers: {
-				'Host': this.server,
-				'Connection': "keep-alive",
-				'Cache-Control': "max-age=0",
-				'Origin': "http://es.ikariam.com",
-				'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.835.186 Safari/535.1",
+				//'Host': this.server,
+				//'Connection': "keep-alive",
+				//'Cache-Control': "max-age=0",
+				//'Origin': "http://es.ikariam.com",
+				//'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.835.186 Safari/535.1",
+				//'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+				//'Referer': "http://es.ikariam.com/index.php",
+				//'Accept-Lanuage': "es,ru;q=0.8",
+				//'Accept-Charset': "utf-8;q=0.7,*;q=0.3",
 				'Content-Type': "application/x-www-form-urlencoded",
-				'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-				'Referer': "http://es.ikariam.com/index.php",
-				'Accept-Lanuage': "es,ru;q=0.8",
-				'Accept-Charset': "utf-8;q=0.7,*;q=0.3",
 				'Cookie': cookies
 			}
 		};
 
-		console.info("Calling: " + method + " http://" + this.server + url + '\n\tCOOKIES: ' + cookies);
+		if (this.log)
+			console.info("Calling: " + method + " http://" + this.server + url + '\n\tCOOKIES: ' + cookies);
 
 		if (post) {
 
 			data = 'uni_url=' + this.server + '&' + createPost(post);
 			config.headers['ContentLength'] = data.length
-			console.info('\tPOST: ' + data);
+			if (this.log)
+				console.info('\tPOST: ' + data);
 
 			var request = http.request(config, handleResponse(this, resp, callback));
 			request.write(data);
@@ -61,9 +72,11 @@ Client.prototype = EventEmitter.prototype.extend({
 	},
 
 	getNoCookies: function(url, callback) {
+		this.calls++;
 		var resp = new Response();
 		http.get({ host: this.server, port: 80, path: url}, handleResponse(this, resp, callback));
-		console.info("Calling: GET http://" + this.server + url);
+		if (this.log)
+			console.info("Calling: GET http://" + this.server + url);
 		return resp;
 	},
 
@@ -93,6 +106,8 @@ function handleJsdom(callback) {
 }
 
 function handleResponse(self, resp, callback) {
+	if (typeof callback !== 'function')
+		throw new Error();
 	return function(response) {
 		self.cookies.parseNewCookies(response);
 		var html = "";
@@ -100,7 +115,6 @@ function handleResponse(self, resp, callback) {
 		function parseData(buffer) {
 			var block = buffer.toString('utf8', 0, buffer.length);
 			html += block;
-			console.log("LEEEEEEEEEEEGNTH:::: "+ html.length);
 			resp.emit('data', block, stop);
 		}
 		function stop() {
