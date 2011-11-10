@@ -5,7 +5,6 @@ int main() {
 	var force = new Force.empty();
 	print(force);
 
-	/*
 	var vec = new Vector(2, 4);
 	print(vec);
 	print(vec.angle);
@@ -17,5 +16,5 @@ int main() {
 	print(vec);
 	print(vec.abs());
 	print(vec);
-	*/
+	print(vec.hypotenuse);
 }

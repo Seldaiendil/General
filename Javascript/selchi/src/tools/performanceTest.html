@@ -3,6 +3,115 @@
 		<title>Performance Test</title>
 		<script type="text/javascript" src="performanceTest.js"></script>
 		<script type="text/javascript">
+			var qx = {
+				ui: {
+					basic: {
+						Atom: function() {
+							
+						}
+					}
+				}
+			}
+			var eyeos = { method: function() { }};
+
+			var test = new PerformanceTest();
+			test.methods = [
+				{
+					name: "Function Call",
+					pre : function() { function test() { }; },
+					loop: function() { test(); }
+
+
+				}, {
+					name: "Local Resolution",
+					pre : function() { var eyeos = { method: function() { }}; },
+					loop: function() { eyeos; }
+
+
+				}, {
+					name: "Property Resolution",
+					pre : function() { var eyeos = { method: function() { }}; },
+					loop: function() { eyeos.method; }
+
+
+				}, function GlobalResolution() {
+					qx.ui.basic.Atom;
+
+
+				}, function GlobalCall() {
+					qx.ui.basic.Atom();
+
+
+				}, function GlobalInstanciation() {
+					new qx.ui.basic.Atom();
+				}
+
+
+
+				/*}, {
+					name: "Both",
+					pre : function() { var eyeos = { method: function() { }}; },
+					loop: function() { eyeos.method(); }
+				}, {
+					name: "Variable Resolution Triple",
+					pre : function() { var eyeos = { test: { method: function() { }}}; },
+					loop: function() { eyeos.test.method; }
+				}, {
+					name: "Both Triple",
+					pre : function() { var eyeos = { test: { method: function() { }}}; },
+					loop: function() { eyeos.test.method(); }*/
+			];
+			test.density = 1000;
+			test.run();
+
+		</script>
+	</head>
+	<body />
+	<script type="text/javascript"> test.print(); </script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
 
 Function.prototype.extendAll = function(childClass) {
 	var self = this;
@@ -44,25 +153,19 @@ Function.prototype.extendNormal = function(childClass) {
 				this.class1 = null;
 			}
 
-			var test = new PerformanceTest();
 			test.methods = [
 				function fullExtensionMethod() {
-					var class = SuperClass.extendAll(Class);
+					SuperClass.extendAll(Class);
 				},
 				function normalExtensionMethod() {
-					var class = SuperClass.extendNormal(Class);
+					SuperClass.extendNormal(Class);
 				},
 				function normalExtensionMethod() {
-					var class = SuperClass.extendNormal(Class);
+					SuperClass.extendNormal(Class);
 				},
 				function fullExtensionMethod() {
-					var class = SuperClass.extendAll(Class);
+					SuperClass.extendAll(Class);
 				},
 			];
-			test.density *= 1;
-			test.run();
-		</script>
-	</head>
-	<body />
-	<script type="text/javascript"> test.print(); </script>
-</html>
+
+-->
