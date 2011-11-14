@@ -23,43 +23,18 @@
 
 
 				}, {
-					name: "Local Resolution",
-					pre : function() { var eyeos = { method: function() { }}; },
-					loop: function() { eyeos; }
-
-
-				}, {
-					name: "Property Resolution",
+					name: "Resolution Global",
 					pre : function() { var eyeos = { method: function() { }}; },
 					loop: function() { eyeos.method; }
 
 
-				}, function GlobalResolution() {
-					qx.ui.basic.Atom;
-
-
-				}, function GlobalCall() {
-					qx.ui.basic.Atom();
-
-
-				}, function GlobalInstanciation() {
-					new qx.ui.basic.Atom();
-				}
-
-
-
-				/*}, {
-					name: "Both",
+				}, {
+					name: "Property Resolutions",
 					pre : function() { var eyeos = { method: function() { }}; },
 					loop: function() { eyeos.method(); }
-				}, {
-					name: "Variable Resolution Triple",
-					pre : function() { var eyeos = { test: { method: function() { }}}; },
-					loop: function() { eyeos.test.method; }
-				}, {
-					name: "Both Triple",
-					pre : function() { var eyeos = { test: { method: function() { }}}; },
-					loop: function() { eyeos.test.method(); }*/
+
+
+				}
 			];
 			test.density = 1000;
 			test.run();
