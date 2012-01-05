@@ -1,14 +1,4 @@
-#library('dartmine');
-
-class _Dartmine {
-	
-
-
-}
-
-
-
-class _Suite {
+class Suite {
 	String message;
 	List<String> fails;
 
@@ -19,11 +9,11 @@ class _Suite {
 	Function handler;
 	Function afterEach;
 
-	_Suite parent;
+	Suite parent;
 	List<_Suite> suites;
 	List<_Expectation> specs;
 
-	_Suite(_Suite parent, String message, Function handler, bool hide, bool isSpec) {
+	Suite(Suite parent, String message, Function handler, bool hide, bool isSpec) {
 		
 	}
 }

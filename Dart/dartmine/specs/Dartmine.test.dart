@@ -1,0 +1,5 @@
+TestDartmine() {
+	describe('Darmine class', () {
+		
+	});
+}
