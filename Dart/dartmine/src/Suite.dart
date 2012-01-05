@@ -1,4 +1,5 @@
 class Suite {
+	/*
 	String message;
 	List<String> fails;
 
@@ -16,4 +17,5 @@ class Suite {
 	Suite(Suite parent, String message, Function handler, bool hide, bool isSpec) {
 		
 	}
+	*/
 }
