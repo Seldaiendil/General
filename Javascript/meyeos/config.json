@@ -36,9 +36,9 @@
 
   "let" :
   {
-    "APPLICATION"  : "meyeos",
+    "APPLICATION"  : "eye",
     "QOOXDOO_PATH" : "../extern/qooxdoo/1.5",
-    "QXTHEME"      : "meyeos.theme.Theme",
+    "QXTHEME"      : "eye.theme.Theme",
     "API_EXCLUDE"  : ["qx.test.*", "${APPLICATION}.theme.*", "${APPLICATION}.test.*", "${APPLICATION}.simulation.*"],
     "LOCALES"      : [ "en" ],
     "CACHE"        : "${TMPDIR}/qx${QOOXDOO_VERSION}/cache",
