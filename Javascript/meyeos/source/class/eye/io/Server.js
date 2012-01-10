@@ -8,6 +8,10 @@ qx.Class.define('eye.io.Server', {
 	members: {
 		_checknum: null,
 
+		invoke: function(method, params) {
+			
+		},
+
 		module: function(module, method, params) {
 			new eye.io.server.call.Module(this._checknum, module, method, params);
 		}

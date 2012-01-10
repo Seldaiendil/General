@@ -1,23 +1,7 @@
-qx.Class.define("eye.test.DemoTest", {
+qx.Class.define("eye.test.io.Server", {
   extend: qx.dev.unit.TestCase,
 
   members: {
-    /*
-    ---------------------------------------------------------------------------
-      TESTS
-    ---------------------------------------------------------------------------
-    */
-  
-    /**
-     * Here are some simple tests
-     */
-    testSimple : function() {
-    },
 
-    /**
-     * Here are some more advanced tests
-     */
-    testAdvanced: function () {
-    }
   }
 });

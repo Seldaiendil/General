@@ -70,6 +70,10 @@ qx.Class.define("eye.core.Init",
       button1.addListener("execute", function(e) {
         alert("Hello World!");
       });
+    },
+
+    init: function(root) {
+      eye.Application.start('init', this.getRoot());
     }
   }
 });
