@@ -1,5 +1,6 @@
 TestDartmine() {
 	describe('Darmine class', () {
-		print("print this");
+		describe('Testing describe', () { });
+		describe('Testing it', () { });
 	});
 }

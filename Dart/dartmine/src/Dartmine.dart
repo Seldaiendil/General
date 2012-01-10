@@ -1,8 +1,17 @@
-class Dartmine {
+interface Dartmine default DartmineImpl {
+	Printer output;
+
+	void describe(String message, void test());
+	void it(String message, void test());
+	void beforeEach(void action());
+	void afterEach(void action());
+}
+
+class DartmineImpl implements Dartmine {
 	Suite _hierarchy;
 	Printer output;
 
-	Dartmine() {
+	DartmineImpl() {
 		_hierarchy = new Suite();
 		output = new Printer();
 	}
@@ -19,4 +28,8 @@ class Dartmine {
 	void it(String message, void test()) { }
 	void beforeEach(void action()) { }
 	void afterEach(void action()) { }
+}
+
+main() {
+	print(new Dartmine());
 }
