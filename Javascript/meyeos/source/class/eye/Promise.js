@@ -9,6 +9,14 @@ qx.Class.define('eye.Promise', {
 		this._state = 'pending';
 	},
 
+	statics: {
+		
+		bind: function() {
+			
+		}
+
+	}
+
 	members: {
 		
 		_state: null,

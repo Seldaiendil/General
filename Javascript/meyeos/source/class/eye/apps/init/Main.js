@@ -23,7 +23,7 @@ qx.Class.define('eye.apps.init.Main', {
 
 		createDestkop: function() {
 			this._root.removeAll();
-			eye.Application.start('desktop', this._root);
+			eye.Application.start('desktop', this._root, 'top');
 		}
 
 	}
