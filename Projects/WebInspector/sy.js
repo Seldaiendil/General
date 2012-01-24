@@ -34,25 +34,22 @@ storage.load().then(function(data) {
 
 function scanSeries(data) {
 	var ids = Object.keys(data.series);
-	massRequest(0);
+	var i = 0;
 
-	function massRequest(current) {
-		var promises = [];
-		var max = current + 10;
-		if (max > data.series.length)
-			max = data.series.length;
-		
-		for (var i = current; i < max; i++)
-			promises.push(requestOne(data.series[ids[i]]));
-		
-		new ps.Promise.all(promises).then(function() {
-			if (diff)
-				fin();
-			if (max !== data.series.length)
-				massRequest(max);
-		});
+	request();
+	request();
+	request();
+	request();
 
-		var diff = true;
+	function request() {
+		if (i >= data.series.length)
+			return;
+		
+		if (i % 10 === 0)
+			storage.save(data);
+		
+		var id = ids[i++];
+		requestOne(data.series[id]).then(request);
 	}
 
 	function requestOne(serie) {
@@ -86,10 +83,5 @@ function scanSeries(data) {
 		});
 
 		return prom;
-	}
-
-	function fin() {
-		console.log("GUARDANDOOOOO");
-		storage.save(data);
 	}
 }
