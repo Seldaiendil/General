@@ -8,7 +8,7 @@ storage.load().then(function(data) {
 		client.query('/').then(function($, html) {
 			var series = {};
 
-			$('.shows_list').children('dl').children('dd').each(function(i) {
+			$('.shows_list').find('dl dd').each(function(i) {
 				var link = $(this).children('a');
 				//console.log("Serie found: " + link.attr('title'));
 
@@ -68,7 +68,7 @@ function scanSeries(data) {
 					capitulos: []
 				};
 
-				$(this).children('table').children('tbody').children().each(function(i) {
+				$(this).find('tbody tr').each(function(i) {
 					var td = $(this).children('.episode-title');
 					var cap = temporada.capitulos[i] = {
 						title: td.text().replace(/\s+/g, ' '),
