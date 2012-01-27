@@ -42,14 +42,15 @@ function scanSeries(data) {
 	request();
 
 	function request() {
-		if (i >= data.series.length)
-			return;
-		
-		if (i % 10 === 0)
-			storage.save(data);
-		
-		var id = ids[i++];
-		requestOne(data.series[id]).then(request);
+		if (i < data.series.length) {
+			if (i % 10 === 0)
+				storage.save(data);
+
+			var id = ids[i++];
+			requestOne(data.series[id]).then(request);
+		}
+
+		storage.save(data);
 	}
 
 	function requestOne(serie) {
@@ -58,7 +59,7 @@ function scanSeries(data) {
 
 		var prom = new ps.Promise();
 
-		client.query(serie.href).then(function($, window, html) {
+		client.query(serie.href).then(function($, html) {
 			serie._loaded = true;
 			console.log("Parseando serie: " + serie.title);
 
