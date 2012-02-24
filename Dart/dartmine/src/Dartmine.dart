@@ -1,35 +1,63 @@
 interface Dartmine default DartmineImpl {
 	Printer output;
 
-	void describe(String message, void test());
-	void it(String message, void test());
+	Dartmine();
+	Dartmine.dependences(Printer printer);
+
+	void test(String message, void exec());
+
 	void beforeEach(void action());
 	void afterEach(void action());
+
+	void fail(String message);
 }
+
 
 class DartmineImpl implements Dartmine {
-	Suite _hierarchy;
-	Printer output;
+	final Queue<Suite> _stack;
+	final Printer output;
+	bool debug = true;
 
-	DartmineImpl() {
-		_hierarchy = new Suite();
-		output = new Printer();
+	DartmineImpl() : this.dependences(new Printer());
+
+	DartmineImpl.dependences(Printer this.output) :
+		_stack = new Queue<Suite>()
+	{
+		_stack.add(new Suite('root'));
 	}
 
-	void describe(String message, void test()) {
+	void test(String message, void exec()) {
+		Suite current = new Suite(message);
 		output.addLevel(message);
 
-		try {
-			test();
-		} catch (Exception err) {
-			
-		}
-	}
-	void it(String message, void test()) { }
-	void beforeEach(void action()) { }
-	void afterEach(void action()) { }
-}
+		Suite parent = _stack.last();
+		_stack.add(current);
 
-main() {
-	print(new Dartmine());
+		if (debug) {
+			parent.beforeEach();
+			exec();
+			parent.afterEach();
+		} else {
+			try {
+				parent.beforeEach();
+				exec();
+				parent.afterEach();
+			} catch (Exception err) {
+				fail("ERROR ON TEST: ${err}");
+			}
+		}
+
+		_stack.removeLast();
+		output.removeLevel();
+	}
+
+	void beforeEach(void action()) =>
+		_stack.last().before.add(action);
+
+	void afterEach(void action()) =>
+		_stack.last().after.add(action);
+
+	void fail(String message) {
+		output.error(message);
+	}
 }

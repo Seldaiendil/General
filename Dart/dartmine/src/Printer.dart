@@ -7,46 +7,41 @@ class PrinterMessageType {
 	const PrinterMessageType(int this.id);
 }
 
-interface Printer factory PrinterFactory {
+interface Printer default ConsolePrinter {
 	Printer();
 
 	void start();
-	void error(String message, PrinterMessageType type);
+	void prant(String message, [PrinterMessageType type]);
+	void error(String message);
 
 	void addLevel(String message);
 	void removeLevel();
-}
-
-class PrinterFactory {
-	factory Printer() {
-		// If it is console
-		if (true) {
-			return new ConsolePrinter();
-		//} else {
-		//	return new HtmlPrinter();
-		}
-	}
 }
 
 class ConsolePrinter implements Printer {
 	final green = '\033[92m';
 	//final error = '\033[91m';
 	final restore = '\033[0m';
+	int deep = 0;
 
-	int _deep = 0;
+	String get indent() {
+		var result = '';
+		for (int i = 0; i < deep; i++)
+			result += '  ';
+		return result;
+	}
 
-	addLevel(String message, [PrinterMessageType type = PrinterMessageType.suite]) {
-		var indent = '';
-		for (int i = 0; i < _deep; i++)
-			indent += '  ';
-		
+	void removeLevel() => deep--;
+	void addLevel(String message) {
+		prant(message);
+		deep++;
+	}
+
+	void prant(String message, [PrinterMessageType type = PrinterMessageType.suite]) =>
 		print("$indent$message");
-		_deep++;
-	}
 
-	removeLevel() {
-		_deep--;
-	}
+	void error(String message) =>
+		prant(message, PrinterMessageType.error);
 
-	error() { }
+	void start() { }
 }

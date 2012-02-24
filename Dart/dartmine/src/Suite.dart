@@ -1,21 +1,21 @@
+typedef void Action();
+
 class Suite {
-	/*
-	String message;
-	List<String> fails;
+	final String message;
+	final List<Action> before;
+	final List<Action> after;
 
-	bool failed = false;
-	bool hide = false;
+	Suite(String this.message) :
+		before = new List<Action>(),
+		after = new List<Action>();
 
-	Function beforeEach;
-	Function handler;
-	Function afterEach;
-
-	Suite parent;
-	List<_Suite> suites;
-	List<_Expectation> specs;
-
-	Suite(Suite parent, String message, Function handler, bool hide, bool isSpec) {
-		
+	void beforeEach() {
+		for (int i = 0; i < before.length; i++)
+			before[i]();
 	}
-	*/
+
+	void afterEach() {
+		for (int i = 0; i < after.length; i++)
+			after[i]();
+	}
 }

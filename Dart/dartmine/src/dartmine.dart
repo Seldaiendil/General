@@ -10,12 +10,12 @@ Dartmine _instance() {
 
 void xdescribe() { }
 void describe(String message, void test()) {
-	_instance().describe(message, test);
+	_instance().test(message, test);
 }
 
 void xit() { }
 void it(String message, void test()) {
-	_instance().it(message, test);
+	_instance().test(message, test);
 }
 
 void beforeEach(void action()) {
@@ -27,5 +27,5 @@ void afterEach(void action()) {
 }
 
 Expectation expect(value) {
-	return new Expectation(value);
+	return new Expectation(_instance(), value);
 }
